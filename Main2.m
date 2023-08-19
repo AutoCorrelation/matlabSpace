@@ -1,40 +1,49 @@
-%Data Loading
+% 초기화
 clear all;
-clc;
-format long;
+close all;
 
+% Sin(at) 모션 모델에 따른 상태 전이 행렬 A
+A = [1 0.1; 0 1]; % 시간 간격은 1
 
-iter = 10^3;  %1e4, 1e5
-NPoints = 50;
+% 측정값을 사용하는 측정 행렬 H
+H = [1 0; 0 1];
 
-x_dim=[0.001,0.01,0.1,1,10,100];
-Varr=[0.001,0.01,0.1,1,10,100];
+% 데이터 생성 (sin 함수 따라 움직이는 2차원 위치 데이터)
+a = 0.1*pi; % sin 함수의 주파수
+n_points = 100; % 데이터 포인트 수
+t = linspace(0, 10, n_points);
+true_positions = [sin(a*t); a*cos(a*t)];
 
-%real value get
-[x0001,velocity0001]=New_Measurement(iter,NPoints,0.001);
-[x001,velocity001]=New_Measurement(iter,NPoints,0.01);
-[x01,velocity01]=New_Measurement(iter,NPoints,0.1);
-[x1,velocity1]=New_Measurement(iter,NPoints,1);
-[x10,velocity10]=New_Measurement(iter,NPoints,10);
-[x100,velocity100]=New_Measurement(iter,NPoints,100);
+% 초기 상태 추정 값
+initial_state = [0; 0];
 
-%kalman filter algorithm
-[KFX0001] = KF(iter,NPoints,x0001,velocity0001,0001);
-[KFX001] = KF(iter,NPoints,x001,velocity001,001);
-[KFX01] = KF(iter,NPoints,x01,velocity01,01);
-[KFX1] = KF(iter,NPoints,x1,velocity1,1);
-[KFX10] = KF(iter,NPoints,x10,velocity10,10);
-[KFX100] = KF(iter,NPoints,x100,velocity100,100);
+% 반복 횟수 설정
+num_iterations = 10;
 
-Filt_Data_x = [KFX0001,KFX001,KFX01,KFX1,KFX10,KFX100];
-%Filt_Data_v = [KFV0001,KFV001,KFV01,KFV1,KFV10,KFV100];
-% 평균 위치측위 오차 성능 plot
-figure(1)
-%semilogx(x,mean_loc_gap_6,'-o','MarkerIndices',1:6)
-hold on
-semilogx(x_dim,Filt_Data_x,'-ro','MarkerIndices',1:6)
-%semilogx(x,Filt_Data_v,'-go','MarkerIndices',1:6)
-legend('KALMAN FILTER')
-grid on
-xlabel ('Noise Variance')
-ylabel('Location error (m)')
+% 반복 실행 및 결과 저장
+all_estimated_states = cell(1, num_iterations);
+for i = 1:num_iterations
+    % 노이즈 추가하여 측정값 생성
+    position_variance = 10; % 위치 분산
+    velocity_variance = 0.1; % 속도 분산
+    noise = [position_variance * randn(1, n_points); velocity_variance * randn(1, n_points)];
+    measurements = true_positions + noise;
+
+    % 칼만 필터 실행
+    estimated_states = run_kalman_filter(A, H, measurements, initial_state);
+    all_estimated_states{i} = estimated_states;
+end
+
+% 결과 시각화
+figure;
+hold on;
+plot(t, true_positions(1, :), 'g');
+plot(t, measurements(1, :), 'b.');
+plot(t, all_estimated_states{3}(1, :), 'r', 'LineWidth', 1);
+
+xlabel('Time');
+ylabel('Position');
+legend('True Position', 'Measurements', 'Estimated Position');
+title('Position Estimation using Kalman Filter');
+
+% run_kalman_filter.m 파일과 함께 사용되어야 하는 함수 파일을 생성하세요.
