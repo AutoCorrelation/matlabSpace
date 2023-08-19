@@ -8,7 +8,7 @@ velocity_variance=0.1;
 iter=1;
 
 a=0.1*pi;
-Npoints = 300;
+Npoints = 10;
 t = linspace(0, 10, Npoints);
 true_state = [sin(a*t);a*cos(a*t)];
 %plot(t,true_position);
@@ -23,12 +23,13 @@ for i=1:iter
         measurement10=true_state+[position_variance(1,5)*randn(1,Npoints);velocity_variance*randn(1,Npoints)];
         measurement100=true_state+[position_variance(1,6)*randn(1,Npoints);velocity_variance*randn(1,Npoints)];
         
-        estimated_state0001=KF(Npoints,initial_state,true_state,measurement0001,0.001);
-        estimated_state001=KF(Npoints,initial_state,true_state,measurement001,0.01);
-        estimated_state01=KF(Npoints,initial_state,true_state,measurement01,0.1);
-        estimated_state1=KF(Npoints,initial_state,true_state,measurement1,1);
-        estimated_state10=KF(Npoints,initial_state,true_state,measurement10,10);
-        estimated_state100=KF(Npoints,initial_state,true_state,measurement100,100);
+        [estimated_state0001,err0001]=KF(Npoints,initial_state,true_state,measurement0001,0.001);
+        [estimated_state001,err001]=KF(Npoints,initial_state,true_state,measurement001,0.01);
+        [estimated_state01,err01]=KF(Npoints,initial_state,true_state,measurement01,0.1);
+        [estimated_state1,err1]=KF(Npoints,initial_state,true_state,measurement1,1);
+        [estimated_state10,err10]=KF(Npoints,initial_state,true_state,measurement10,10);
+        [estimated_state100,err100]=KF(Npoints,initial_state,true_state,measurement100,100);
+        err=[err0001 err001 err01 err1 err10 err100];
 
         all_estimated_state0001{i}=estimated_state0001;
         all_estimated_state001{i}=estimated_state001;
@@ -42,9 +43,11 @@ end
 figure;
 hold on;
 plot(t, true_state(1, :), 'g', 'LineWidth', 2);
-plot(t, measurement10(1, :), 'b.', 'MarkerSize', 10);
-plot(t, all_estimated_state10{1}(1, :), 'r', 'LineWidth', 1);
+plot(t, measurement001(1, :), 'b.', 'MarkerSize', 10);
+plot(t, all_estimated_state001{1}(1, :), 'r', 'LineWidth', 1);
 xlabel('Time');
 ylabel('Position');
 legend('True Position', 'Measurements', 'Estimated Position');
 title('Position Estimation using Kalman Filter');
+figure;
+semilogx(position_variance,err(1,:));
