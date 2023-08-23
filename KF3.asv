@@ -1,7 +1,8 @@
-function [K_est,K_theory,est,theory,est_transition=zeros(1,Npoints);]=KF3(iter,Npoints,variance,measurement)
+function [K_est,K_theory,est,theory,est_transition,theory_transition]=KF3(iter,Npoints,variance,measurement)
 final_loc_est=zeros(iter,1);
 t = linspace(0,10,Npoints);
-K_est = zeros(1,Npoints);
+K_est_1 = zeros(iter,Npoints);
+K_est_2 = zeros(1,iter);
 est_transition=zeros(1,Npoints);
 
 for i = 1:iter
@@ -25,16 +26,22 @@ for i = 1:iter
         covErr=pre_covErr-K*H*pre_covErr;
         Q = (pre_state-est_state)*(pre_state-est_state)';
         %Q = (pre_state-measurement{i}(:,j))*(pre_state-measurement{i}(:,j))';
-        K_est(1,j) = norm(K,'fro');  % K 값 저장
+        K_est_1(i,j) = norm(covErr,'fro');  % K(P_cov 값 저장
         if i==iter
-           est_transition=state(1,j) ;
+           est_transition(1,j)=est_state(1,1) ;
         end
     end
     final_loc_est(i,1)=est_state(1,1);
+
+end
+for j=1:Npoints
+    K_est(1,j)=sum(K_est_1)(:,j),"all")/iter;
 end
 final_loc_mean_est=sum(final_loc_est,'all')/iter;
 est=sqrt(final_loc_mean_est^2);
-K_theory = zeros(1,Npoints);
+
+K_theory_1 = zeros(iter,Npoints);
+K_theory = zeros(1,Npoi);
 theory_transition=zeros(1,Npoints);
 %THEORY 예측-실제값
 final_loc_theory=zeros(iter,1);
@@ -59,13 +66,20 @@ for i = 1:iter
         est_state=pre_state+K*(measurement{i}(:,j)-H*pre_state);
         covErr=pre_covErr-K*H*pre_covErr;
         Q2 = (pre_state-true_state(:,j))*(pre_state-true_state(:,j))';
-        K_theory(1,j) = norm(K,'fro');  % K 값 저장
+        K_theory_1(i,j) = norm(covErr,'fro');  % K 값 저장 각 iter의 스텝
+        % 별로 평균내기
         if i==iter
-           theory_transition=state(1,j) ;
+           theory_transition(1,j)=est_state(1,1) ;
         end
     end
     final_loc_theory(i,1)=est_state(1,1);
+    
 end
+for j=1:Npoints
+    K_theory(1,j)=sum(K_theory_1(:,j),"all")/Npoints;
+end
+
+
 final_loc_mean_theory=sum(final_loc_theory,'all')/iter;
 theory=sqrt(final_loc_mean_theory^2);
 

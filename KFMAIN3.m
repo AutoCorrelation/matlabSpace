@@ -47,23 +47,25 @@ xlabel('Position variance');
 ylabel('Err');
 title('Error each variance at step 50 and 200');
 hold off
+
 %plot 2
+t = linspace(0,10,Npoints2);
 figure;
-semilogx(position_variance,P_cov,'LineWidth',2);
+plot(1:Npoints2,s_K_est1,'LineWidth',2);
 hold on
-semilogx(position_variance,s_P_cov,'LineWidth',2);
+plot(1:Npoints2,s_K_theory1,'LineWidth',2);
 legend('est','theory');
 xlabel('step');
-ylabel('Kalman Gain norm value');
+ylabel('estimation cov value');
 hold off
 %plot 3
-t = linspace(0,10,Npoints2);
+
 true_state = [10*sin(a*t);10*a*cos(a*t)];
 figure;
 plot(t, true_state(1, :), 'g');
 hold on
-plot(t, s_measurement1{iter}(1, :), 'b.');
-plot(t, s_est_transition1(1,:), 'r', 'LineWidth', 2);
+plot(t, s_measurement10{iter}(1, :), 'b.');
+plot(t, s_est_transition10(1,:), 'r', 'LineWidth', 2);
 xlabel('step');
 ylabel('Location');
 legend('True Position', 'Measurements', 'Estimated Position');
