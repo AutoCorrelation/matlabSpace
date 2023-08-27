@@ -1,8 +1,8 @@
 function[x_toa,y_toa,all_gap_loc,F,LPF] = TOA(iter,NPoints,D1_Measurement, D2_Measurement, D3_Measurement, D4_Measurement)
 %H matrix Z=Hx
 
-MFV = 4; %이동평균필터 크기
-LPF_a = 0.4;  %LPF Alpha Degree
+MFV = 3; %이동평균필터 크기
+LPF_a = 0.5;  %LPF Alpha Degree
 
 x_lpf = zeros(iter,NPoints);
 y_lpf = zeros(iter,NPoints);
@@ -20,7 +20,11 @@ loc_gap_Filter1 = zeros(iter, NPoints-MFV+1);
 loc_gap_lpf = zeros(iter,NPoints-1);
 Moving_Mean_Filter_x = zeros(iter, NPoints);
 Moving_Mean_Filter_y = zeros(iter, NPoints);
+Filtered_Data_x = zeros(iter, NPoints-MFV+1);
+Filtered_Data_y = zeros(iter, NPoints-MFV+1);
 
+x_gap_f = zeros(iter, NPoints-MFV+1);
+y_gap_f = zeros(iter, NPoints-MFV+1);
 x = zeros(1, NPoints);
 y = zeros(1, NPoints);
 Location = [x;

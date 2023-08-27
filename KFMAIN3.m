@@ -5,7 +5,7 @@ close all;
 position_variance=[0.001,0.01,0.1,1,10,100];
 velocity_variance=0.1;
 
-iter=1e3;
+iter=1e4;
 a=0.1*pi;
 
 % When Npoints 10
@@ -60,12 +60,16 @@ ylabel('estimation cov value');
 hold off
 %plot 3
 
-true_state = [10*sin(a*t);10*a*cos(a*t)];
+%true_state = [10*sin(a*t);10*a*cos(a*t)];
+%exp 환경 추가
+b=0.1;
+true_state = [exp(b*t);b*exp(b*t)];
+
 figure;
 plot(t, true_state(1, :), 'g');
 hold on
-plot(t, s_measurement10{iter}(1, :), 'b.');
-plot(t, s_est_transition10(1,:), 'r', 'LineWidth', 2);
+plot(t, s_measurement1{iter}(1, :), 'b.');
+plot(t, s_est_transition1(1,:), 'r', 'LineWidth', 2);
 xlabel('step');
 ylabel('Location');
 legend('True Position', 'Measurements', 'Estimated Position');

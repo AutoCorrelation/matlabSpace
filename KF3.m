@@ -4,11 +4,17 @@ t = linspace(0,10,Npoints);
 K_est_1 = zeros(iter,Npoints);
 K_est = zeros(1,Npoints);
 est_transition=zeros(1,Npoints);
+% exp 환경 추가
+b=0.1;
+true_state = [exp(b*t);b*exp(b*t)];
 
 for i = 1:iter
     a=0.1*pi;
 
-    initial_state=[0; 10*a*cos(0)];
+    %initial_state=[0; 10*a*cos(0)];
+    %exp 환경 추가
+    initial_state = [exp(0);b*exp(0)];
+    
     d = size(initial_state,1);
     A=[1 10/Npoints; 0 1];
     H=[1 0;0 1];
@@ -38,7 +44,7 @@ for j=1:Npoints
     K_est(1,j)=sum(K_est_1(:,j),"all")/iter ; %저장 평균
 end
 final_loc_mean_est=sum(final_loc_est,'all')/iter;
-est=sqrt(final_loc_mean_est^2);
+est=sqrt((final_loc_mean_est-true_state(1,Npoints))^2);
 
 K_theory_1 = zeros(iter,Npoints);
 K_theory = zeros(1,Npoints);
@@ -48,8 +54,9 @@ final_loc_theory=zeros(iter,1);
 
 for i = 1:iter
     a=0.1*pi;
-    true_state = [10*sin(a*t);10*a*cos(a*t)];
-    initial_state=[0; 10*a*cos(0)];
+    %true_state = [10*sin(a*t);10*a*cos(a*t)];
+    %initial_state=[0; 10*a*cos(0)];
+    initial_state = [exp(0);b*exp(0)];
     d = size(initial_state,1);
     A=[1 10/Npoints; 0 1];
     H=[1 0;0 1];
@@ -81,6 +88,7 @@ end
 
 
 final_loc_mean_theory=sum(final_loc_theory,'all')/iter;
-theory=sqrt(final_loc_mean_theory^2);
+theory=sqrt((final_loc_mean_theory-true_state(1,Npoints))^2);
+
 
 %data get

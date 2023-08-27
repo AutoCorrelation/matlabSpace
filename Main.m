@@ -1,10 +1,10 @@
 %Data Loading
-clear all;
+clear;
 clc;
 format long;
 
 
-iter = 10^3;  %1e4, 1e5
+iter = 1e3;  %1e4, 1e5
 NPoints = 11;
 
 x=[0.001,0.01,0.1,1,10,100];
