@@ -2,11 +2,11 @@ function[measurement0001,measurement001,measurement01,measurement1,measurement10
 velocity_variance=0.1;
 
 t = linspace(0, 10, Npoints);
-%a=0.1*pi;
-%true_state = [10*sin(a*t);10*a*cos(a*t)];
+a=0.1*pi;
+true_state = [10*sin(a*t);10*a*cos(a*t)];
 % exp 환경 추가 b
-b=0.1;
-true_state = [exp(b*t);b*exp(b*t)];
+%b=0.1;
+%true_state = [exp(b*t);b*exp(b*t)];
 position_variance=0.001;
 
 for i=1:iter

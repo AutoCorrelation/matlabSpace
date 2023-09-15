@@ -5,22 +5,25 @@ K_est_1 = zeros(iter,Npoints);
 K_est = zeros(1,Npoints);
 est_transition=zeros(1,Npoints);
 % exp 환경 추가
-b=0.1;
-true_state = [exp(b*t);b*exp(b*t)];
+%b=0.1;
+a=0.1*pi;
+true_state = [10*sin(a*t);10*a*cos(a*t)];
+%true_state = [exp(b*t);b*exp(b*t)];
 
 for i = 1:iter
     a=0.1*pi;
 
-    %initial_state=[0; 10*a*cos(0)];
+    initial_state=[0; 10*a*cos(0)];
     %exp 환경 추가
-    initial_state = [exp(0);b*exp(0)];
+    %initial_state = [exp(0);b*exp(0)];
     
     d = size(initial_state,1);
     A=[1 10/Npoints; 0 1];
     H=[1 0;0 1];
     R=[variance^2 0;0 0.01];
     Q=[(variance*randn(1))^2, 0; 0, (0.1*randn(1))^2];
-    %ESTIMATION 예측-추정OR축정값
+    %Q=zeros(2,2);
+    %ESTIMATION 예측-추정OR정값
         
     est_state=initial_state;
     covErr=zeros(d,d);
@@ -53,15 +56,15 @@ theory_transition=zeros(1,Npoints);
 final_loc_theory=zeros(iter,1);
 
 for i = 1:iter
-    a=0.1*pi;
-    %true_state = [10*sin(a*t);10*a*cos(a*t)];
-    %initial_state=[0; 10*a*cos(0)];
-    initial_state = [exp(0);b*exp(0)];
+    
+    initial_state=[0; 10*a*cos(0)];
+    %initial_state = [exp(0);b*exp(0)];
     d = size(initial_state,1);
     A=[1 10/Npoints; 0 1];
     H=[1 0;0 1];
     R=[variance^2 0;0 0.01];
     Q2=[(variance*randn(1))^2, 0; 0, (0.1*randn(1))^2];
+    %Q2=zeros(2,2);
     %THEORY 예측-실제값
         
     est_state=initial_state;
