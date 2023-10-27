@@ -5,11 +5,11 @@ close all;
 position_variance=[0.001,0.01,0.1,1,10,100];
 velocity_variance=0.1;
 
-iter=1e4;
+iter=1e3;
 a=0.1*pi;
 
 % When Npoints 50
-Npoints1 = 100;
+Npoints1 = 50;
 [measurement0001,measurement001,measurement01,measurement1,measurement10,measurement100] = MD(iter,Npoints1);
 %kalman filter Algorithm 1
 [K_est0001,K_theory0001,est0001,theory0001,est_transition0001,theory_transition0001]=KF3(iter,Npoints1,0.001,measurement0001);
@@ -22,7 +22,7 @@ est_all_gap=[est0001 est001 est01 est1 est10 est100];
 P_cov=[K_est0001 K_est001 K_est01 K_est1 K_est10 K_est10];
 theory_all_gap=[theory0001 theory001 theory01 theory1 theory10 theory100];
 %When Npoints 200
-Npoints2 = 1000;
+Npoints2 = 200;
 [s_measurement0001,s_measurement001,s_measurement01,s_measurement1,s_measurement10,s_measurement100] = MD(iter,Npoints2);
 %kalman filter Algorithm 2
 [s_K_est0001,s_K_theory0001,s_est0001,s_theory0001,s_est_transition0001,s_theory_transition0001]=KF3(iter,Npoints2,0.001,s_measurement0001);
