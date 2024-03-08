@@ -22,6 +22,7 @@ for i = 1:iter
     H=[1 0;0 1];
     R=[variance^2 0;0 0.01];
     Q=[(variance*randn(1))^2, 0; 0, (0.1*randn(1))^2];
+    % Q=[(variance*randn(1)), 0; 0, (0.1*randn(1))];
     %Q=zeros(2,2);
     %ESTIMATION 예측-추정OR정값
         

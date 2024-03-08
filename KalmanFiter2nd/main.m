@@ -3,7 +3,7 @@ clear all;
 clc;
 format long;
 
-iter = 1e3;  %1e4, 1e5
+iter = 1e2;  %1e4, 1e5
 NPoints = 10;
 
 Var=[0.001,0.01,0.1,1,10,100];
@@ -61,7 +61,7 @@ D4_Measurement_100 = load('Measurement_from_Anchor4_at_MNV_100.txt');
 [all_gap_pos_100_1,x_toa_100,y_toa_100] = TOA(iter,NPoints, ...
     D1_Measurement_100, D2_Measurement_100,D3_Measurement_100,D4_Measurement_100);
 
-Q_001 = setQ(iter,NPoints,x_toa_001,y_toa_001);
+[Q_001,P0_001] = simulation(iter,NPoints,x_toa_001,y_toa_001);
 
 %LPF algorithm
 all_gap_pos_0001_2 = TOA_LPF(iter,NPoints, ...
