@@ -1,4 +1,4 @@
-function [Q,P_0] = simulation(iter,Npoints, x_toa, y_toa)
+function [Q,P_0,simulated_W] = simulation(iter,Npoints, x_toa, y_toa)
 %step 1, 2 is ToA(iter,Npoints) -> Initial estimate process
 
 %step 3~ Kalman Filter ( predict by velocity )
@@ -46,7 +46,7 @@ simulated_W = [w_1; w_2];  % system equation term.
 P_0 = [Px_0;Py_0];
 
 simulated_Q = simulated_W*simulated_W';
-Q = simulated_Q -simulated_W 
+Q = simulated_Q -simulated_W; 
 
 
 
