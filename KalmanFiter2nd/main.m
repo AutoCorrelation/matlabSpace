@@ -61,8 +61,8 @@ D4_Measurement_100 = load('Measurement_from_Anchor4_at_MNV_100.txt');
 [all_gap_pos_100_1,x_toa_100,y_toa_100] = TOA(iter,NPoints, ...
     D1_Measurement_100, D2_Measurement_100,D3_Measurement_100,D4_Measurement_100);
 
-[Q_001,P0_001] = simulation(iter,NPoints,x_toa_001,y_toa_001);
-
+% [Q_001,P0_001] = simulation(iter,NPoints,x_toa_001,y_toa_001);
+[test] = LKF(iter,NPoints,x_toa_1,y_toa_1);
 %LPF algorithm
 all_gap_pos_0001_2 = TOA_LPF(iter,NPoints, ...
     D1_Measurement_0001,D2_Measurement_0001,D3_Measurement_0001,D4_Measurement_0001);

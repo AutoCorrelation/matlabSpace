@@ -43,11 +43,10 @@ w_2 = sum(y_err,"all")/iter;
 Px_0 = sum(x_theory_err,"all")/iter;
 Py_0 = sum(y_theory_err,"all")/iter;
 simulated_W = [w_1; w_2];  % system equation term.
-P_0 = [Px_0;Py_0];
+P_0 = [Px_0^2 0;0 Py_0^2];
 
 simulated_Q = simulated_W*simulated_W';
-Q = simulated_Q -simulated_W; 
-
-
+covQ = diag(simulated_Q);
+Q = diag(covQ)-diag(simulated_W.^2); %Issue Here Cov Q matrix was zeros-3/10
 
 end
