@@ -3,7 +3,7 @@ clear all;
 clc;
 format long;
 
-iter = 1e2;  %1e4, 1e5
+iter = 1e3;  %1e4, 1e5
 NPoints = 10;
 
 Var=[0.001,0.01,0.1,1,10,100];
@@ -62,7 +62,13 @@ D4_Measurement_100 = load('Measurement_from_Anchor4_at_MNV_100.txt');
     D1_Measurement_100, D2_Measurement_100,D3_Measurement_100,D4_Measurement_100);
 
 % [Q_001,P0_001] = simulation(iter,NPoints,x_toa_001,y_toa_001);
-[test] = LKF(iter,NPoints,x_toa_1,y_toa_1);
+[test0001] = LKF(iter,NPoints,x_toa_0001,y_toa_0001,0.001);
+[test001] = LKF(iter,NPoints,x_toa_001,y_toa_001,0.01);
+[test01] = LKF(iter,NPoints,x_toa_01,y_toa_01,0.1);
+[test1] = LKF(iter,NPoints,x_toa_1,y_toa_1,1);
+[test10] = LKF(iter,NPoints,x_toa_10,y_toa_10,10);
+[test100] = LKF(iter,NPoints,x_toa_100,y_toa_100,100);
+
 %LPF algorithm
 all_gap_pos_0001_2 = TOA_LPF(iter,NPoints, ...
     D1_Measurement_0001,D2_Measurement_0001,D3_Measurement_0001,D4_Measurement_0001);
@@ -83,15 +89,19 @@ all_gap_pos_100_2 = TOA_LPF(iter,NPoints, ...
 %error average per variances(0.001~100)
 mean_loc_gap_1 = [all_gap_pos_0001_1 all_gap_pos_001_1 all_gap_pos_01_1 all_gap_pos_1_1 all_gap_pos_10_1 all_gap_pos_100_1];
 mean_loc_gap_2 = [all_gap_pos_0001_2 all_gap_pos_001_2 all_gap_pos_01_2 all_gap_pos_1_2 all_gap_pos_10_2 all_gap_pos_100_2];
-
+kalman_Gain = [test0001; test001; test01; test1; test10; test100];
 % 평균 위치측위 오차 성능 plot
 figure(1);
 semilogx(Var,mean_loc_gap_1,'-o','MarkerIndices',1:6)
 grid on
 hold on
 semilogx(Var,mean_loc_gap_2,'-o','MarkerIndices',1:6)
+% semilogx(Var,kalman_Gain,'-o','MarkerIndices',1:6); % kalman gain or position
 title('Evaluation based on Location Accuracy')
 legend('TOA','LPF')
+% legend('TOA','LPF','LKF')
 %,'Enhanced LPF','KalmanFilter','KalmanFilter(gamma-Q)')
 xlabel ('Noise Variance')
 ylabel('Location error (m)')
+figure(2)
+plot(test01,'-o','MarkerIndices',1:NPoints); % kalman gain or position

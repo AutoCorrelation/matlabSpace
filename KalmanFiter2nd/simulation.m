@@ -47,6 +47,6 @@ P_0 = [Px_0^2 0;0 Py_0^2];
 
 simulated_Q = simulated_W*simulated_W';
 covQ = diag(simulated_Q);
-Q = diag(covQ)-diag(simulated_W.^2); %Issue Here Cov Q matrix was zeros-3/10
+Q = diag(covQ);%-diag(simulated_W.^2); %Issue Here Cov Q matrix was zeros-3/10
 
 end
