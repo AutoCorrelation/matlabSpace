@@ -48,18 +48,19 @@ D4_Measurement_100 = load('Measurement_from_Anchor4_at_MNV_100.txt');
 
 
 % ToA algorithm
-[all_gap_pos_0001_1,x_toa_0001,y_toa_0001] = TOA(iter,NPoints, ...
+all_gap_pos_0001_1 = TOA(iter,NPoints, ...
     D1_Measurement_0001,D2_Measurement_0001,D3_Measurement_0001,D4_Measurement_0001);
-[all_gap_pos_001_1,x_toa_001,y_toa_001] = TOA(iter,NPoints, ...
+all_gap_pos_001_1 = TOA(iter,NPoints, ...
     D1_Measurement_001,D2_Measurement_001,D3_Measurement_001,D4_Measurement_001);
-[all_gap_pos_01_1,x_toa_01,y_toa_01] = TOA(iter,NPoints, ...
+all_gap_pos_01_1 = TOA(iter,NPoints, ...
     D1_Measurement_01,D2_Measurement_01,D3_Measurement_01,D4_Measurement_01);
-[all_gap_pos_1_1,x_toa_1,y_toa_1] = TOA(iter,NPoints, ...
+all_gap_pos_1_1 = TOA(iter,NPoints, ...
     D1_Measurement_1, D2_Measurement_1,D3_Measurement_1,D4_Measurement_1);
-[all_gap_pos_10_1,x_toa_10,y_toa_10] = TOA(iter,NPoints, ...
+all_gap_pos_10_1 = TOA(iter,NPoints, ...
     D1_Measurement_10, D2_Measurement_10,D3_Measurement_10,D4_Measurement_10);
-[all_gap_pos_100_1,x_toa_100,y_toa_100] = TOA(iter,NPoints, ...
+all_gap_pos_100_1 = TOA(iter,NPoints, ...
     D1_Measurement_100, D2_Measurement_100,D3_Measurement_100,D4_Measurement_100);
+
 
 %LPF algorithm
 all_gap_pos_0001_2 = TOA_LPF(iter,NPoints, ...
@@ -76,11 +77,10 @@ all_gap_pos_100_2 = TOA_LPF(iter,NPoints, ...
     D1_Measurement_100, D2_Measurement_100,D3_Measurement_100,D4_Measurement_100);
 
 
-
-
 %error average per variances(0.001~100)
 mean_loc_gap_1 = [all_gap_pos_0001_1 all_gap_pos_001_1 all_gap_pos_01_1 all_gap_pos_1_1 all_gap_pos_10_1 all_gap_pos_100_1];
 mean_loc_gap_2 = [all_gap_pos_0001_2 all_gap_pos_001_2 all_gap_pos_01_2 all_gap_pos_1_2 all_gap_pos_10_2 all_gap_pos_100_2];
+
 % 평균 위치측위 오차 성능 plot
 figure(1);
 semilogx(Var,mean_loc_gap_1,'-o','MarkerIndices',1:6)
@@ -89,6 +89,6 @@ hold on
 semilogx(Var,mean_loc_gap_2,'-o','MarkerIndices',1:6)
 title('Evaluation based on Location Accuracy')
 legend('TOA','LPF')
-% legend('TOA','LPF','LKF')
+%,'Enhanced LPF','KalmanFilter','KalmanFilter(gamma-Q)')
 xlabel ('Noise Variance')
 ylabel('Location error (m)')
