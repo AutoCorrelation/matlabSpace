@@ -10,7 +10,7 @@ function plotCos(A, f, phase,t)
     grid on
 
     for v = 1:3
-        plot(t, A(1) * cos(2 * pi * f(1) * t) + phase(v));
+        plot(t, A(1) * cos(2 * pi * f(1) * t + phase(v)));
     end
 
     title("1-그림 a");
