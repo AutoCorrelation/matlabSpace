@@ -1,4 +1,4 @@
-function plotCos(A, f, phase,t)
+function plotCos(A, f, phase, t)
     % Variables
     % A = [1, 2, 3];
     % f = [1, 2, 3];
@@ -14,7 +14,7 @@ function plotCos(A, f, phase,t)
     end
 
     title("1-그림 a");
-    legend("phase=0","phase=pi/2","phase=-pi/2");
+    legend("phase=0", "phase=pi/2", "phase=-pi/2");
     hold off
     %1-b) plot
     figure(2);
@@ -26,7 +26,7 @@ function plotCos(A, f, phase,t)
     end
 
     title("1-그림 b");
-    legend("freq=1","freq=2","freq=3");
+    legend("freq=1", "freq=2", "freq=3");
     hold off
 
     %1-c) plot
@@ -39,6 +39,6 @@ function plotCos(A, f, phase,t)
     end
 
     title("1-그림 c");
-    legend("amplitude=1","amplitude=2","amplitude=3");
+    legend("amplitude=1", "amplitude=2", "amplitude=3");
     hold off
 end
