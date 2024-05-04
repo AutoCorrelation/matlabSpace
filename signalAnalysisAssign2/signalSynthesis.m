@@ -4,8 +4,6 @@ period_Sampling = 0.001;
 w = pi/T;
 N = [3,10,20,40];
 t = -6:period_Sampling:6;
-test = zeros(length(t),1);
-
 
 for num1 = 1:length(N)
     test = zeros(length(t),1);
