@@ -1,7 +1,7 @@
 function [] = signalSynthesis(A,T,k,FourierCoefficient)
 X_k=FourierCoefficient;
 period_Sampling = 0.001;
-w = pi/T;
+w = 2*pi/T;
 N = [3,10,20,40];
 t = -6:period_Sampling:6;
 

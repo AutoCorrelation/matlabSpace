@@ -22,7 +22,7 @@ triSignal(ceil(L/2)) = A/2;
 if plotEnable == 1
     grid on
     subplot(2,1,1);
-    stem(k,triSignal); % 진폭 스펙트럼
+    stem(k,abs(triSignal)); % 진폭 스펙트럼
     title("Amplitude Spectrum");
     xlabel("W");
     ylabel("|X_k|")
