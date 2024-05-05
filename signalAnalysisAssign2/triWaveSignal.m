@@ -3,8 +3,6 @@ function [triSignal] = triWaveSignal(A,T,k,plotEnable)
 L = length(k); %length of frequency range
 triSignal = zeros(L,1); % Full-Wave Rectified Signal
 phase = zeros(L,1);
-% baseSignal = 2*A/T;
-% fwrSignal(ceil(L/2)) = baseSignal;
 
 for i = 1:L
     if (rem(abs(k(i)),2)==1) % k 가 짝수일 때

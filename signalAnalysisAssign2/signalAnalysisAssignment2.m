@@ -8,30 +8,29 @@ format long;
 % Define Variable
 Amplitude = 2;
 T_period = 2;
-N = 50; %set fequency max amplitude
+N = 50; %set number of max harmonics
 k = -N:N; %set frequency Range
 
-% 1 전파 정류파 신호 (Full-Wave Rectified Signal)
-figure(1)
-fwR = fwRectifiedSignal(Amplitude, 2*T_period, k,1); %Show spectrum.
-figure(2)
-signalSynthesis(Amplitude,2*T_period, k,fwR); %Show Signal
-
-% 2 방형파 신호 
-figure(3)
-rectW = rectWaveSignal(Amplitude, T_period,k,1); 
-figure(4)
-signalSynthesis(Amplitude,T_period,k,rectW);
+% % 1 전파 정류파 신호 (Full-Wave Rectified Signal)
+% figure(1)
+% fwR = fwRectifiedSignal(Amplitude, 2*T_period, k,1); %Show spectrum.
+% figure(2)
+% harmonicsSynthesis(Amplitude,2*T_period, k,fwR); %Show Signal
+% 
+% % 2 방형파 신호 
+% figure(3)
+% squareW = squareWaveSignal(Amplitude, T_period,k,1); 
+% figure(4)
+% harmonicsSynthesis(Amplitude,T_period,k,squareW);
 
 %추가 진행 삼각파
 figure(5)
 triW = triWaveSignal(Amplitude, T_period, k,1);
 figure(6)
-signalSynthesis(Amplitude,T_period,k,triW);
+harmonicsSynthesis(Amplitude,T_period,k,triW);
 
 %추가 진행 반파 정류파 half-wave rectified signal
 figure(7)
 hwR = hwRectifiedSignal(Amplitude, T_period,k,1); 
 figure(8)
-signalSynthesis(Amplitude,T_period,k,hwR);
-
+harmonicsSynthesis(Amplitude,T_period,k,hwR);
