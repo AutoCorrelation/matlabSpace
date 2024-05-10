@@ -7,9 +7,9 @@ phase = zeros(L,1); %zero column vector
 %harmonics part
 for i = 1:L
     % Fourier Coefficient
-    if (rem(abs(k(i)),2)==0) % k 가 짝수일 때
-        fwrSignal(i) = 2*A/((1-k(i)*k(i))*pi); %값 대입
-    end
+    % if (rem(abs(k(i)),2)==0) % k 가 짝수일 때
+    fwrSignal(i) = 2*A/((1-4*k(i)*k(i))*pi); %값 대입
+    % end
     % save its phase
     if fwrSignal(i)<0
         if k(i)<0
@@ -30,7 +30,7 @@ if plotEnable == 1
     title("Amplitude Spectrum");
     xlabel("W");
     ylabel("|X_k|")
-
+    
     subplot(2,1,2);
     stem(k,phase); % 위상 스펙트럼
     title("Phase Spectrum");
