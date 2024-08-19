@@ -2,12 +2,10 @@ clear
 close all
 clc
 
-size = 2;
+size = 3;
 
 inputMatrix = ceil(randn(size));
 inputMatrix = inputMatrix*inputMatrix'
 
 outputMatrix = CholeskySqrt(inputMatrix,size)
-
-
-% outputMatrix2 = GramSchmidtOrth(inputMatrix)
+outputMatrix2 = GramSchmidtOrth
