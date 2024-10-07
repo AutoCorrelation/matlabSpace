@@ -1,4 +1,4 @@
-function h = getSonar(inputArg1,inputArg2)
+function h = getSonar()
 %UNTITLED3 이 함수의 요약 설명 위치
 %   자세한 설명 위치
 persistent sonarAlt
