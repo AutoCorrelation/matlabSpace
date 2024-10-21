@@ -1,6 +1,4 @@
-function[Loc_Err] = ToA(iteration,Nsamples,AnchorMax1,AnchorMax2)
-% Load measurements File and do ToA Algorithm
-% return Location Error
+function[Loc_Err,LPF_Err] = LPF_ToA(iteration,Nsamples,AnchorMax1,AnchorMax2,alpha)
 
 measurement1_001 = load("measurements_Anchor1_001.txt");
 measurement2_001 = load("measurements_Anchor2_001.txt");
@@ -50,7 +48,7 @@ H = [...
     2*AnchorMax1, 2*AnchorMax2
     0, 2*AnchorMax2];
 
-H_pseudoInv = (H'*H)\H'; 
+H_pseudoInv = (H'*H)\H';
 
 for i = 1:iteration
     for j = 1:Nsamples
@@ -106,9 +104,38 @@ for i = 1:iteration
         Loc_Err1(i,j) = norm(exactPos(:,j)-ToA_State1(:,j));
         Loc_Err10(i,j) = norm(exactPos(:,j)-ToA_State10(:,j));
         Loc_Err100(i,j) = norm(exactPos(:,j)-ToA_State100(:,j));
-
+        
+        
+        if(j>1)
+            LPF001(:,i) = (1-alpha)*LPF001(:,i)+alpha*ToA_State001(:,j);
+            LPF01(:,i) = (1-alpha)*LPF01(:,i)+alpha*ToA_State01(:,j);
+            LPF1(:,i) = (1-alpha)*LPF1(:,i)+alpha*ToA_State1(:,j);
+            LPF10(:,i) = (1-alpha)*LPF10(:,i)+alpha*ToA_State10(:,j);
+            LPF100(:,i) = (1-alpha)*LPF100(:,i)+alpha*ToA_State100(:,j);
+        else
+            LPF001(:,i) = ToA_State001(:,j);
+            LPF01(:,i) = ToA_State01(:,j);
+            LPF1(:,i) = ToA_State1(:,j);
+            LPF10(:,i) = ToA_State10(:,j);
+            LPF100(:,i) = ToA_State100(:,j);
+        end
     end
+    temp001(i,1) = norm(LPF001(:,i)'-exactPos(:,j));
+    temp01(i,1) = norm(LPF01(:,i)'-exactPos(:,j));
+    temp1(i,1) = norm(LPF1(:,i)'-exactPos(:,j));
+    temp10(i,1) = norm(LPF10(:,i)'-exactPos(:,j));
+    temp100(i,1) = norm(LPF100(:,i)'-exactPos(:,j));
+    
 end
+
+LPF_Err = [...
+    sum(temp001,"all")/iteration
+    sum(temp01,"all")/iteration
+    sum(temp1,"all")/iteration
+    sum(temp10,"all")/iteration
+    sum(temp100,"all")/iteration
+    ];
+
 fclose("all");
 Loc_Err = [...
     sum(Loc_Err001,"all")/(iteration*Nsamples);
@@ -117,4 +144,5 @@ Loc_Err = [...
     sum(Loc_Err10,"all")/(iteration*Nsamples);
     sum(Loc_Err100,"all")/(iteration*Nsamples)
     ];
+
 end

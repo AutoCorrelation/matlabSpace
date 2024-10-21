@@ -1,11 +1,11 @@
-function [] = Measurement(iteration,Nsamples,AnchorMax1,AnchorMax2,Anchor1,Anchor2,Anchor3,Anchor4)
-% Anchor1~A4 is each Anchor's Location in 2-Dim
+function [] = Measurement(iteration,Nsamples,Anchor1,Anchor2,Anchor3,Anchor4)
+% Measure d1~d4 from Anchor1~4 and save data.
 %
 
-%Measurement Noises Matrix
+% Measurement Noises Matrix
 measurementNoise = [0.01,0.1,1,10,100];
 
-%% File open
+% file open
 fileID001_1 = fopen('measurements_Anchor1_001.txt','w');
 fileID001_2 = fopen('measurements_Anchor2_001.txt','w');
 fileID001_3 = fopen('measurements_Anchor3_001.txt','w');
@@ -33,7 +33,6 @@ fileID100_4 = fopen('measurements_Anchor4_100.txt','w');
 
 fileID_X = fopen('exactPosX.txt','w');
 fileID_Y = fopen('exactPosY.txt','w');
-%%
 
 exactPosX = zeros(Nsamples,1);
 exactPosY = zeros(Nsamples,1);
@@ -41,9 +40,9 @@ exactPosY = zeros(Nsamples,1);
 
 for i = 1:iteration
     for j = 1:Nsamples
-        % random User Location.
-        exactPosX(j,1) = AnchorMax1*rand;
-        exactPosY(j,1) = AnchorMax2*rand;
+        % uniform velocity motion (1,1) ~ (10,10)
+        exactPosX(j,1) = j;
+        exactPosY(j,1) = j;
         
         measurement1_001(j,1) = sqrt((exactPosX(j,1)-Anchor1(1,1))^2+(exactPosY(j,1)-Anchor1(2,1))^2) + sqrt(measurementNoise(1))*randn; % 001
         measurement1_01(j,1) = sqrt((exactPosX(j,1)-Anchor1(1,1))^2+(exactPosY(j,1)-Anchor1(2,1))^2) + sqrt(measurementNoise(2))*randn; % 01
@@ -69,7 +68,7 @@ for i = 1:iteration
         measurement4_10(j,1) = sqrt((exactPosX(j,1)-Anchor4(1,1))^2+(exactPosY(j,1)-Anchor4(2,1))^2) + sqrt(measurementNoise(4))*randn; % 10
         measurement4_100(j,1) = sqrt((exactPosX(j,1)-Anchor4(1,1))^2+(exactPosY(j,1)-Anchor4(2,1))^2) + sqrt(measurementNoise(5))*randn; % 100
     end
-    %% File Write
+    % File Write
     fprintf(fileID001_1,'%.3f ',measurement1_001);
     fprintf(fileID001_1,'\n');
     fprintf(fileID001_2,'%.3f ',measurement2_001);
@@ -122,6 +121,5 @@ for i = 1:iteration
 end
 
 fclose("all");
-%%
 
 end
