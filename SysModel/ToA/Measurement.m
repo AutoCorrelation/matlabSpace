@@ -33,6 +33,8 @@ fileID100_4 = fopen('measurements_Anchor4_100.txt','w');
 
 fileID_X = fopen('exactPosX.txt','w');
 fileID_Y = fopen('exactPosY.txt','w');
+fileID_pos = fopen('exactPos.txt','w');
+
 
 exactPosX = zeros(Nsamples,1);
 exactPosY = zeros(Nsamples,1);
@@ -119,6 +121,8 @@ for i = 1:iteration
     fprintf(fileID_Y,'%.3f ',exactPosY);
     fprintf(fileID_Y,'\n');
 end
+pos = [exactPosX exactPosY];
+fprintf(fileID_pos,'%.3f ',pos);
 
 fclose("all");
 

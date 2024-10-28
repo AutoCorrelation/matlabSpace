@@ -1,4 +1,4 @@
-function[Loc_Err,LPF_Err] = LPF_ToA(iteration,Nsamples,AnchorMax1,AnchorMax2,alpha)
+function[Loc_Err,LPF_Loc_Err] = LPF_ToA(iteration,Nsamples,AnchorMax1,AnchorMax2,alpha)
 
 measurement1_001 = load("measurements_Anchor1_001.txt");
 measurement2_001 = load("measurements_Anchor2_001.txt");
@@ -27,6 +27,9 @@ measurement4_100 = load("measurements_Anchor4_100.txt");
 
 exactPosX = load("exactPosX.txt");
 exactPosY = load("exactPosY.txt");
+% exactPos = load("exactPos.txt");
+
+fileID_LPF1 = fopen("lpfLoc.txt","w");
 
 ToA_State001 = zeros(2,Nsamples);
 ToA_State01 = zeros(2,Nsamples);
@@ -99,44 +102,49 @@ for i = 1:iteration
         ToA_State100(:,j) = H_pseudoInv*D100;
 
         exactPos = [exactPosX(i,:); exactPosY(i,:)];
+
         Loc_Err001(i,j) = norm(exactPos(:,j)-ToA_State001(:,j));
         Loc_Err01(i,j) = norm(exactPos(:,j)-ToA_State01(:,j));
         Loc_Err1(i,j) = norm(exactPos(:,j)-ToA_State1(:,j));
         Loc_Err10(i,j) = norm(exactPos(:,j)-ToA_State10(:,j));
         Loc_Err100(i,j) = norm(exactPos(:,j)-ToA_State100(:,j));
-        
-        
-        if(j>1)
-            LPF001(:,i) = (1-alpha)*LPF001(:,i)+alpha*ToA_State001(:,j);
-            LPF01(:,i) = (1-alpha)*LPF01(:,i)+alpha*ToA_State01(:,j);
-            LPF1(:,i) = (1-alpha)*LPF1(:,i)+alpha*ToA_State1(:,j);
-            LPF10(:,i) = (1-alpha)*LPF10(:,i)+alpha*ToA_State10(:,j);
-            LPF100(:,i) = (1-alpha)*LPF100(:,i)+alpha*ToA_State100(:,j);
+
+        %LPF part
+        if(j==1)
+            LPF001(:,j) = ToA_State001(:,j);
+            LPF01(:,j) = ToA_State01(:,j);
+            LPF1(:,j) = ToA_State1(:,j);
+            LPF10(:,j) = ToA_State10(:,j);
+            LPF100(:,j) = ToA_State100(:,j);
         else
-            LPF001(:,i) = ToA_State001(:,j);
-            LPF01(:,i) = ToA_State01(:,j);
-            LPF1(:,i) = ToA_State1(:,j);
-            LPF10(:,i) = ToA_State10(:,j);
-            LPF100(:,i) = ToA_State100(:,j);
+            LPF001(:,j) = (1-alpha)*LPF001(:,j-1)+alpha*ToA_State001(:,j);
+            LPF01(:,j) = (1-alpha)*LPF01(:,j-1)+alpha*ToA_State01(:,j);
+            LPF1(:,j) = (1-alpha)*LPF1(:,j-1)+alpha*ToA_State1(:,j);
+            LPF10(:,j) = (1-alpha)*LPF10(:,j-1)+alpha*ToA_State10(:,j);
+            LPF100(:,j) = (1-alpha)*LPF100(:,j-1)+alpha*ToA_State100(:,j);
         end
+        LPF_Loc_Err001(i,j)=norm(exactPos(:,j)-LPF001(:,j));
+        LPF_Loc_Err01(i,j)=norm(exactPos(:,j)-LPF01(:,j));
+        LPF_Loc_Err1(i,j)=norm(exactPos(:,j)-LPF1(:,j));
+        LPF_Loc_Err10(i,j)=norm(exactPos(:,j)-LPF10(:,j));
+        LPF_Loc_Err100(i,j)=norm(exactPos(:,j)-LPF100(:,j));
     end
-    temp001(i,1) = norm(LPF001(:,i)'-exactPos(:,j));
-    temp01(i,1) = norm(LPF01(:,i)'-exactPos(:,j));
-    temp1(i,1) = norm(LPF1(:,i)'-exactPos(:,j));
-    temp10(i,1) = norm(LPF10(:,i)'-exactPos(:,j));
-    temp100(i,1) = norm(LPF100(:,i)'-exactPos(:,j));
-    
 end
 
-LPF_Err = [...
-    sum(temp001,"all")/iteration
-    sum(temp01,"all")/iteration
-    sum(temp1,"all")/iteration
-    sum(temp10,"all")/iteration
-    sum(temp100,"all")/iteration
+for iter = 1:size(LPF01,1)
+    fprintf(fileID_LPF1,'%.3f\t',LPF01(iter,:));
+    fprintf(fileID_LPF1,'\n');
+end
+
+LPF_Loc_Err = [...
+    sum(LPF_Loc_Err001,"all")/(iteration*Nsamples)
+    sum(LPF_Loc_Err01,"all")/(iteration*Nsamples)
+    sum(LPF_Loc_Err1,"all")/(iteration*Nsamples)
+    sum(LPF_Loc_Err10,"all")/(iteration*Nsamples)
+    sum(LPF_Loc_Err100,"all")/(iteration*Nsamples)
     ];
 
-fclose("all");
+
 Loc_Err = [...
     sum(Loc_Err001,"all")/(iteration*Nsamples);
     sum(Loc_Err01,"all")/(iteration*Nsamples);
@@ -145,4 +153,5 @@ Loc_Err = [...
     sum(Loc_Err100,"all")/(iteration*Nsamples)
     ];
 
+fclose("all");
 end
