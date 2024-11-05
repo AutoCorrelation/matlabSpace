@@ -40,6 +40,30 @@ exactPosX = zeros(Nsamples,1);
 exactPosY = zeros(Nsamples,1);
 
 
+measurement1_001 = zeros(Nsamples,1);
+measurement1_01 = zeros(Nsamples,1);
+measurement1_1 = zeros(Nsamples,1);
+measurement1_10 = zeros(Nsamples,1);
+measurement1_100 = zeros(Nsamples,1);
+
+measurement2_001 = zeros(Nsamples,1);
+measurement2_01 = zeros(Nsamples,1);
+measurement2_1 = zeros(Nsamples,1);
+measurement2_10 = zeros(Nsamples,1);
+measurement2_100 = zeros(Nsamples,1);
+
+measurement3_001 = zeros(Nsamples,1);
+measurement3_01 = zeros(Nsamples,1);
+measurement3_1 = zeros(Nsamples,1);
+measurement3_10 = zeros(Nsamples,1);
+measurement3_100 = zeros(Nsamples,1);
+
+measurement4_001 = zeros(Nsamples,1);
+measurement4_01 = zeros(Nsamples,1);
+measurement4_1 = zeros(Nsamples,1);
+measurement4_10 = zeros(Nsamples,1);
+measurement4_100 = zeros(Nsamples,1);
+
 for i = 1:iteration
     for j = 1:Nsamples
         % uniform velocity motion (1,1) ~ (10,10)

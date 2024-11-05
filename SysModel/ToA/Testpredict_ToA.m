@@ -74,6 +74,12 @@ ErrLoc100 = zeros(iteration,samples);
 exactPosX = load("exactPosX.txt");
 exactPosY = load("exactPosY.txt");
 
+vec_eeT001 = zeros(2,iteration);
+vec_eeT01 = zeros(2,iteration);
+vec_eeT1 = zeros(2,iteration);
+vec_eeT10 = zeros(2,iteration);
+vec_eeT100 = zeros(2,iteration);
+
 matrix_eeT001 = zeros(2,2);
 matrix_eeT01 = zeros(2,2);
 matrix_eeT1 = zeros(2,2);
@@ -114,7 +120,7 @@ for iter=1:iteration
             vec_vel10 = [meas_x10(:,num)-meas_x10(:,num-1); meas_y10(:,num)-meas_y10(:,num-1)]./dt;
             vec_vel100 = [meas_x100(:,num)-meas_x100(:,num-1); meas_y100(:,num)-meas_y100(:,num-1)]./dt;
         end
-        vec_prev_wk001 = [exactPosX()]
+        %vec_prev_wk001 = [exactPosX()]
     end
 end
 
