@@ -21,12 +21,12 @@ end
 exactPos = [exactPosX(iter,num);exactPosY(iter,num)];
 
 D = [...
-measurements.a1(iter,num)^2 - measurements.a2(iter,num)^2 - d2^2
-measurements.a1(iter,num)^2 - measurements.a3(iter,num)^2 + d1^2 - d2^2
-measurements.a1(iter,num)^2 - measurements.a4(iter,num)^2 + d1^2
-measurements.a2(iter,num)^2 - measurements.a3(iter,num)^2 + d1^2
-measurements.a2(iter,num)^2 - measurements.a4(iter,num)^2 + d1^2 + d2^2
-measurements.a3(iter,num)^2 - measurements.a4(iter,num)^2 + d2^2 ];
+    measurements.a1(iter,num)^2 - measurements.a2(iter,num)^2 - d2^2
+    measurements.a1(iter,num)^2 - measurements.a3(iter,num)^2 + d1^2 - d2^2
+    measurements.a1(iter,num)^2 - measurements.a4(iter,num)^2 + d1^2
+    measurements.a2(iter,num)^2 - measurements.a3(iter,num)^2 + d1^2
+    measurements.a2(iter,num)^2 - measurements.a4(iter,num)^2 + d1^2 + d2^2
+    measurements.a3(iter,num)^2 - measurements.a4(iter,num)^2 + d2^2 ];
 
 vec_ToA = H_pseudoInv * D;
 meas_x = vec_ToA(1);

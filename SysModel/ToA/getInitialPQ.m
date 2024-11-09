@@ -13,12 +13,12 @@ samples=11;
 A = eye(2,2);
 dt = 0.1;
 
-getNewMeasrue = false;
-if(getNewMeasrue)
-    Measurement(iteration,samples,Anchor);
-else
-    disp("Use previously recorded measurements");
-end
+% getNewMeasrue = false;
+% if(getNewMeasrue)
+%     Measurement(iteration,samples,Anchor);
+% else
+%     disp("Use previously recorded measurements");
+% end
 
 measurement1_001 = load("measurements_Anchor1_001.txt");
 measurement2_001 = load("measurements_Anchor2_001.txt");
@@ -53,32 +53,32 @@ measurements_100 = struct('a1',measurement1_100,'a2',measurement2_100,'a3',measu
 
 meas_x001 = zeros(iteration,samples);
 meas_y001 = zeros(iteration,samples);
-predic_x001 = zeros(iteration,samples-1);
-predic_y001 = zeros(iteration,samples-1);
+predic_x001 = zeros(iteration,1);
+predic_y001 = zeros(iteration,1);
 ErrLoc001 = zeros(iteration,samples);
 
 meas_x01 = zeros(iteration,samples);
 meas_y01 = zeros(iteration,samples);
-predic_x01 = zeros(iteration,samples-1);
-predic_y01 = zeros(iteration,samples-1);
+predic_x01 = zeros(iteration,1);
+predic_y01 = zeros(iteration,1);
 ErrLoc01= zeros(iteration,samples);
 
 meas_x1 = zeros(iteration,samples);
 meas_y1 = zeros(iteration,samples);
-predic_x1 = zeros(iteration,samples-1);
-predic_y1 = zeros(iteration,samples-1);
+predic_x1 = zeros(iteration,1);
+predic_y1 = zeros(iteration,1);
 ErrLoc1 = zeros(iteration,samples);
 
 meas_x10 = zeros(iteration,samples);
 meas_y10 = zeros(iteration,samples);
-predic_x10 = zeros(iteration,samples-1);
-predic_y10 = zeros(iteration,samples-1);
+predic_x10 = zeros(iteration,1);
+predic_y10 = zeros(iteration,1);
 ErrLoc10 = zeros(iteration,samples);
 
 meas_x100 = zeros(iteration,samples);
 meas_y100 = zeros(iteration,samples);
-predic_x100 = zeros(iteration,samples-1);
-predic_y100 = zeros(iteration,samples-1);
+predic_x100 = zeros(iteration,1);
+predic_y100 = zeros(iteration,1);
 ErrLoc100 = zeros(iteration,samples);
 
 exactPosX = load("exactPosX.txt");
@@ -115,13 +115,13 @@ for iter=1:iteration
         [meas_x1(iter,num),meas_y1(iter,num),v_ErrLoc1] = prev_ToA(Anchor, measurements_1,iter,num);
         [meas_x10(iter,num),meas_y10(iter,num),v_ErrLoc10] = prev_ToA(Anchor, measurements_10,iter,num);
         [meas_x100(iter,num),meas_y100(iter,num),v_ErrLoc100] = prev_ToA(Anchor, measurements_100,iter,num);
-
+        
         ErrLoc001(iter,num) = norm(v_ErrLoc001);
         ErrLoc01(iter,num) = norm(v_ErrLoc01);
         ErrLoc1(iter,num) = norm(v_ErrLoc1);
         ErrLoc10(iter,num) = norm(v_ErrLoc10);
         ErrLoc100(iter,num) = norm(v_ErrLoc100);
-
+        
         switch num
             case 1
                 vec_0err001(:,iter) = v_ErrLoc001;
@@ -129,7 +129,7 @@ for iter=1:iteration
                 vec_0err1(:,iter) = v_ErrLoc1;
                 vec_0err10(:,iter) = v_ErrLoc10;
                 vec_0err100(:,iter) = v_ErrLoc100;
-
+                
                 matrix_eeT001 = matrix_eeT001 + v_ErrLoc001*v_ErrLoc001';
                 matrix_eeT01 = matrix_eeT01 + v_ErrLoc01*v_ErrLoc01';
                 matrix_eeT1 = matrix_eeT1 + v_ErrLoc1*v_ErrLoc1';
@@ -141,31 +141,31 @@ for iter=1:iteration
                 vec_predict1 = [meas_x1(iter,num);meas_y1(iter,num)];
                 vec_predict10 = [meas_x10(iter,num);meas_y10(iter,num)];
                 vec_predict100 = [meas_x100(iter,num);meas_y100(iter,num)];
-
-                predic_x001(iter,num-1) = vec_predict001(1);
-                predic_x01(iter,num-1) = vec_predict01(1);
-                predic_x1(iter,num-1) = vec_predict1(1);
-                predic_x10(iter,num-1) = vec_predict10(1);
-                predic_x100(iter,num-1) = vec_predict100(1);
-
-                predic_y001(iter,num-1) = vec_predict001(2);
-                predic_y01(iter,num-1) = vec_predict01(2);
-                predic_y1(iter,num-1) = vec_predict1(2);
-                predic_y10(iter,num-1) = vec_predict10(2);
-                predic_y100(iter,num-1) = vec_predict100(2);
+                
+                predic_x001(iter,1) = vec_predict001(1);
+                predic_x01(iter,1) = vec_predict01(1);
+                predic_x1(iter,1) = vec_predict1(1);
+                predic_x10(iter,1) = vec_predict10(1);
+                predic_x100(iter,1) = vec_predict100(1);
+                
+                predic_y001(iter,1) = vec_predict001(2);
+                predic_y01(iter,1) = vec_predict01(2);
+                predic_y1(iter,1) = vec_predict1(2);
+                predic_y10(iter,1) = vec_predict10(2);
+                predic_y100(iter,1) = vec_predict100(2);
             case 3
                 vec_velocity001 = [vec_predict001(1)-meas_x001(iter,num-2);vec_predict001(2)-meas_y001(iter,num-2)]/dt;
                 vec_velocity01 = [vec_predict01(1)-meas_x01(iter,num-2);vec_predict01(2)-meas_y01(iter,num-2)]/dt;
                 vec_velocity1 = [vec_predict1(1)-meas_x1(iter,num-2);vec_predict1(2)-meas_y1(iter,num-2)]/dt;
                 vec_velocity10 = [vec_predict10(1)-meas_x10(iter,num-2);vec_predict10(2)-meas_y10(iter,num-2)]/dt;
                 vec_velocity100 = [vec_predict100(1)-meas_x100(iter,num-2);vec_predict100(2)-meas_y100(iter,num-2)]/dt;
-
+                
                 vec_predict001 = A*vec_predict001 + vec_velocity001*dt;
                 vec_predict01 = A*vec_predict01 + vec_velocity01*dt;
                 vec_predict1 = A*vec_predict1 + vec_velocity1*dt;
                 vec_predict10 = A*vec_predict10 + vec_velocity10*dt;
                 vec_predict100 = A*vec_predict100 + vec_velocity100*dt;
-
+                
                 vec_3w001(:,iter) = ([exactPosX(iter,num);exactPosY(iter,num)] - vec_predict001);
                 vec_3w01(:,iter) = ([exactPosX(iter,num);exactPosY(iter,num)] - vec_predict01);
                 vec_3w1(:,iter) = ([exactPosX(iter,num);exactPosY(iter,num)] - vec_predict1);
@@ -200,15 +200,48 @@ P0 = struct(...
     'var10',matrix_eeT10 - mean(vec_0err10,2)*mean(vec_0err10,2)',...
     'var100',matrix_eeT100 - mean(vec_0err100,2)*mean(vec_0err100,2)');
 
-Q3 = struct(...
-    'var001',matrix_wwT001 - mean(vec_3w001,2)*mean(vec_3w001,2)',...
-    'var01',matrix_wwT01 - mean(vec_3w01,2)*mean(vec_3w01,2)',...
-    'var1',matrix_wwT1 - mean(vec_3w1,2)*mean(vec_3w1,2)',...
-    'var10',matrix_wwT10 - mean(vec_3w10,2)*mean(vec_3w10,2)',...
-    'var100',matrix_wwT100 - mean(vec_3w100,2)*mean(vec_3w100,2)');
+% Q3 = struct(...
+%     'var001',matrix_wwT001 - mean(vec_3w001,2)*mean(vec_3w001,2)',...
+%     'var01',matrix_wwT01 - mean(vec_3w01,2)*mean(vec_3w01,2)',...
+%     'var1',matrix_wwT1 - mean(vec_3w1,2)*mean(vec_3w1,2)',...
+%     'var10',matrix_wwT10 - mean(vec_3w10,2)*mean(vec_3w10,2)',...
+%     'var100',matrix_wwT100 - mean(vec_3w100,2)*mean(vec_3w100,2)');
 
-save('P0.mat','P0');
-save('Q3.mat','Q3');
+Q3 = struct(...
+    'var001',matrix_wwT001,...
+    'var01',matrix_wwT01,...
+    'var1',matrix_wwT1,...
+    'var10',matrix_wwT10,...
+    'var100',matrix_wwT100);
+    
+[P0_V001, P0_D001] = eig(P0.var001);
+[P0_V01, P0_D01] = eig(P0.var01);
+[P0_V1, P0_D1] = eig(P0.var1);
+[P0_V10, P0_D10] = eig(P0.var10);
+[P0_V100, P0_D100] = eig(P0.var100);
+
+[Q3_V001, Q3_D001] = eig(Q3.var001);
+[Q3_V01, Q3_D01] = eig(Q3.var01);
+[Q3_V1, Q3_D1] = eig(Q3.var1);
+[Q3_V10, Q3_D10] = eig(Q3.var10);
+[Q3_V100, Q3_D100] = eig(Q3.var100);
+
+P0_diag = struct(...
+    'var001', P0_D001,...
+    'var01', P0_D01,...
+    'var1', P0_D1,...
+    'var10', P0_D10,...
+    'var100', P0_D100);
+
+Q3_diag = struct(...
+    'var001', Q3_D001,...
+    'var01', Q3_D01,...
+    'var1', Q3_D1,...
+    'var10', Q3_D10,...
+    'var100', Q3_D100);
+
+save('P0_diag.mat', 'P0_diag');
+save('Q3_diag.mat', 'Q3_diag');
 
 figure(1)
 semilogx(m_variance,meanErr);
@@ -217,6 +250,3 @@ xlabel("variance");
 ylabel("err");
 legend("ToA");
 grid on
-
-
-
