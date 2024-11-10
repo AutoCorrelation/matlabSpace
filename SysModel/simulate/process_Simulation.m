@@ -82,5 +82,5 @@ P = struct(...
 
 save("P.mat","P");
 
-scatter(vec_processNoise.var001(1,:),vec_processNoise.var001(2,:));
+scatter(vec_processNoise.var1(1,:),vec_processNoise.var1(2,:));
 end

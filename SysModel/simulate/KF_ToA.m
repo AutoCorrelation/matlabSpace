@@ -140,4 +140,7 @@ for i = 1:num_sample
     buf(i,1) = trace(a(:,:,1,i));
 end
 stem((1:num_sample),buf);
+title("estimation Error Covariance at variance 1")
+xlabel("step")
+ylabel("trace(P_k)")
 end
