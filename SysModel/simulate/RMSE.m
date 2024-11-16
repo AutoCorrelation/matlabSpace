@@ -1,4 +1,4 @@
-function MSE()
+function RMSE()
 close all
 load("LSE.mat");
 load("est_state.mat")
