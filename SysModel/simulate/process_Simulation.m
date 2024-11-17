@@ -54,6 +54,8 @@ for iter = 1:iteration
 
 end
 
+
+
 Q = struct(...
     'var001', (mean(wwT001,3) - mean(vec_processNoise.var001,2)*mean(vec_processNoise.var001,2)'),...
     'var01', (mean(wwT01,3) - mean(vec_processNoise.var01,2)*mean(vec_processNoise.var01,2)'),...
@@ -84,5 +86,4 @@ meanSysnoise = struct('var001',mean(vec_processNoise.var001,2),...
 save('meanSysnoise.mat','meanSysnoise');
 
 histogram2(vec_processNoise.var100(1,:),vec_processNoise.var100(2,:));
-disp(mean(vec_processNoise.var100,2))
 end
