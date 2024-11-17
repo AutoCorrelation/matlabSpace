@@ -8,7 +8,7 @@ F = [1 0;0 1];
 H = 1;
 
 % predict
-predict_state = F * prev_estimate_state + prev_velocity*dt - meanSysnoise;
+predict_state = F * prev_estimate_state + prev_velocity*dt + meanSysnoise;
 % estimate_state = F * prev_estimate_state + prev_velocity*dt;
 predict_covariance = F * prev_estimate_cov * F' + Q;
 % estimate_covariance = F * prev_estimate_cov * F' + Q;
