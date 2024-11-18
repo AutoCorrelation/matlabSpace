@@ -1,10 +1,6 @@
-function process_Simulation()
-format long e;
-clear all;
-
+function process_Simulation(iteration)
 dt = 0.1;
-iteration = 1e4;
-n_variance = [1e-2; 1e-1; 1e0; 1e1; 1e2];
+% n_variance = [1e-2; 1e-1; 1e0; 1e1; 1e2];
 load("LSE.mat");
 
 F = [1 0;0 1];
@@ -84,6 +80,6 @@ meanSysnoise = struct('var001',mean(vec_processNoise.var001,2),...
     );
 
 save('meanSysnoise.mat','meanSysnoise');
-
-histogram2(vec_processNoise.var100(1,:),vec_processNoise.var100(2,:));
+figure(1);
+histogram2(vec_processNoise.var1(1,:),vec_processNoise.var1(2,:));
 end

@@ -1,4 +1,4 @@
-function LSE = ToA(meas_dn)
+function [LSE,D] = ToA(meas_dn)
 persistent firstRun
 persistent H_pseudoInv d1 d2
 
@@ -26,3 +26,5 @@ D = [...
     ];
 
 LSE = H_pseudoInv * D;
+
+end
