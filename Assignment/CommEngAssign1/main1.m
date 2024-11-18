@@ -41,7 +41,7 @@ s_t_FM1 = Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f1*theta_t);
 s_t_FM2 = Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f2*theta_t);
 S_f_FM1 = fftshift(fft(s_t_FM1))*Ts;
 S_f_FM2 = fftshift(fft(s_t_FM2))*Ts;
-a = getIntegral(m_t,Ts);
+
 %% Plot
 figure;
 subplot(3,2,1);

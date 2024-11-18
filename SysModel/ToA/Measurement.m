@@ -1,4 +1,4 @@
-function [] = Measurement(iteration,Nsamples,Anchor1,Anchor2,Anchor3,Anchor4)
+function [] = Measurement(iteration,Nsamples,Anchor)
 % Measure d1~d4 from Anchor1~4 and save data.
 %
 
@@ -40,35 +40,59 @@ exactPosX = zeros(Nsamples,1);
 exactPosY = zeros(Nsamples,1);
 
 
+measurement1_001 = zeros(Nsamples,1);
+measurement1_01 = zeros(Nsamples,1);
+measurement1_1 = zeros(Nsamples,1);
+measurement1_10 = zeros(Nsamples,1);
+measurement1_100 = zeros(Nsamples,1);
+
+measurement2_001 = zeros(Nsamples,1);
+measurement2_01 = zeros(Nsamples,1);
+measurement2_1 = zeros(Nsamples,1);
+measurement2_10 = zeros(Nsamples,1);
+measurement2_100 = zeros(Nsamples,1);
+
+measurement3_001 = zeros(Nsamples,1);
+measurement3_01 = zeros(Nsamples,1);
+measurement3_1 = zeros(Nsamples,1);
+measurement3_10 = zeros(Nsamples,1);
+measurement3_100 = zeros(Nsamples,1);
+
+measurement4_001 = zeros(Nsamples,1);
+measurement4_01 = zeros(Nsamples,1);
+measurement4_1 = zeros(Nsamples,1);
+measurement4_10 = zeros(Nsamples,1);
+measurement4_100 = zeros(Nsamples,1);
+
 for i = 1:iteration
     for j = 1:Nsamples
         % uniform velocity motion (1,1) ~ (10,10)
-        exactPosX(j,1) = j;
-        exactPosY(j,1) = j;
+        exactPosX(j,1) = j-1;
+        exactPosY(j,1) = j-1;
         
-        measurement1_001(j,1) = sqrt((exactPosX(j,1)-Anchor1(1,1))^2+(exactPosY(j,1)-Anchor1(2,1))^2) + sqrt(measurementNoise(1))*randn; % 001
-        measurement1_01(j,1) = sqrt((exactPosX(j,1)-Anchor1(1,1))^2+(exactPosY(j,1)-Anchor1(2,1))^2) + sqrt(measurementNoise(2))*randn; % 01
-        measurement1_1(j,1) = sqrt((exactPosX(j,1)-Anchor1(1,1))^2+(exactPosY(j,1)-Anchor1(2,1))^2) + sqrt(measurementNoise(3))*randn; % 1
-        measurement1_10(j,1) = sqrt((exactPosX(j,1)-Anchor1(1,1))^2+(exactPosY(j,1)-Anchor1(2,1))^2) + sqrt(measurementNoise(4))*randn; % 10
-        measurement1_100(j,1) = sqrt((exactPosX(j,1)-Anchor1(1,1))^2+(exactPosY(j,1)-Anchor1(2,1))^2) + sqrt(measurementNoise(5))*randn; % 100
+        measurement1_001(j,1) = sqrt((exactPosX(j,1)-Anchor.a1(1,1))^2+(exactPosY(j,1)-Anchor.a1(2,1))^2) + sqrt(measurementNoise(1))*randn; % 001
+        measurement1_01(j,1) = sqrt((exactPosX(j,1)-Anchor.a1(1,1))^2+(exactPosY(j,1)-Anchor.a1(2,1))^2) + sqrt(measurementNoise(2))*randn; % 01
+        measurement1_1(j,1) = sqrt((exactPosX(j,1)-Anchor.a1(1,1))^2+(exactPosY(j,1)-Anchor.a1(2,1))^2) + sqrt(measurementNoise(3))*randn; % 1
+        measurement1_10(j,1) = sqrt((exactPosX(j,1)-Anchor.a1(1,1))^2+(exactPosY(j,1)-Anchor.a1(2,1))^2) + sqrt(measurementNoise(4))*randn; % 10
+        measurement1_100(j,1) = sqrt((exactPosX(j,1)-Anchor.a1(1,1))^2+(exactPosY(j,1)-Anchor.a1(2,1))^2) + sqrt(measurementNoise(5))*randn; % 100
         
-        measurement2_001(j,1) = sqrt((exactPosX(j,1)-Anchor2(1,1))^2+(exactPosY(j,1)-Anchor2(2,1))^2) + sqrt(measurementNoise(1))*randn; % 001
-        measurement2_01(j,1) = sqrt((exactPosX(j,1)-Anchor2(1,1))^2+(exactPosY(j,1)-Anchor2(2,1))^2) + sqrt(measurementNoise(2))*randn; % 01
-        measurement2_1(j,1) = sqrt((exactPosX(j,1)-Anchor2(1,1))^2+(exactPosY(j,1)-Anchor2(2,1))^2) + sqrt(measurementNoise(3))*randn; % 1
-        measurement2_10(j,1) = sqrt((exactPosX(j,1)-Anchor2(1,1))^2+(exactPosY(j,1)-Anchor2(2,1))^2) + sqrt(measurementNoise(4))*randn; % 10
-        measurement2_100(j,1) = sqrt((exactPosX(j,1)-Anchor2(1,1))^2+(exactPosY(j,1)-Anchor2(2,1))^2) + sqrt(measurementNoise(5))*randn; % 100
+        measurement2_001(j,1) = sqrt((exactPosX(j,1)-Anchor.a2(1,1))^2+(exactPosY(j,1)-Anchor.a2(2,1))^2) + sqrt(measurementNoise(1))*randn; % 001
+        measurement2_01(j,1) = sqrt((exactPosX(j,1)-Anchor.a2(1,1))^2+(exactPosY(j,1)-Anchor.a2(2,1))^2) + sqrt(measurementNoise(2))*randn; % 01
+        measurement2_1(j,1) = sqrt((exactPosX(j,1)-Anchor.a2(1,1))^2+(exactPosY(j,1)-Anchor.a2(2,1))^2) + sqrt(measurementNoise(3))*randn; % 1
+        measurement2_10(j,1) = sqrt((exactPosX(j,1)-Anchor.a2(1,1))^2+(exactPosY(j,1)-Anchor.a2(2,1))^2) + sqrt(measurementNoise(4))*randn; % 10
+        measurement2_100(j,1) = sqrt((exactPosX(j,1)-Anchor.a2(1,1))^2+(exactPosY(j,1)-Anchor.a2(2,1))^2) + sqrt(measurementNoise(5))*randn; % 100
         
-        measurement3_001(j,1) = sqrt((exactPosX(j,1)-Anchor3(1,1))^2+(exactPosY(j,1)-Anchor3(2,1))^2) + sqrt(measurementNoise(1))*randn; % 001
-        measurement3_01(j,1) = sqrt((exactPosX(j,1)-Anchor3(1,1))^2+(exactPosY(j,1)-Anchor3(2,1))^2) + sqrt(measurementNoise(2))*randn; % 01
-        measurement3_1(j,1) = sqrt((exactPosX(j,1)-Anchor3(1,1))^2+(exactPosY(j,1)-Anchor3(2,1))^2) + sqrt(measurementNoise(3))*randn; % 1
-        measurement3_10(j,1) = sqrt((exactPosX(j,1)-Anchor3(1,1))^2+(exactPosY(j,1)-Anchor3(2,1))^2) + sqrt(measurementNoise(4))*randn; % 10
-        measurement3_100(j,1) = sqrt((exactPosX(j,1)-Anchor3(1,1))^2+(exactPosY(j,1)-Anchor3(2,1))^2) + sqrt(measurementNoise(5))*randn; % 100
+        measurement3_001(j,1) = sqrt((exactPosX(j,1)-Anchor.a3(1,1))^2+(exactPosY(j,1)-Anchor.a3(2,1))^2) + sqrt(measurementNoise(1))*randn; % 001
+        measurement3_01(j,1) = sqrt((exactPosX(j,1)-Anchor.a3(1,1))^2+(exactPosY(j,1)-Anchor.a3(2,1))^2) + sqrt(measurementNoise(2))*randn; % 01
+        measurement3_1(j,1) = sqrt((exactPosX(j,1)-Anchor.a3(1,1))^2+(exactPosY(j,1)-Anchor.a3(2,1))^2) + sqrt(measurementNoise(3))*randn; % 1
+        measurement3_10(j,1) = sqrt((exactPosX(j,1)-Anchor.a3(1,1))^2+(exactPosY(j,1)-Anchor.a3(2,1))^2) + sqrt(measurementNoise(4))*randn; % 10
+        measurement3_100(j,1) = sqrt((exactPosX(j,1)-Anchor.a3(1,1))^2+(exactPosY(j,1)-Anchor.a3(2,1))^2) + sqrt(measurementNoise(5))*randn; % 100
         
-        measurement4_001(j,1) = sqrt((exactPosX(j,1)-Anchor4(1,1))^2+(exactPosY(j,1)-Anchor4(2,1))^2) + sqrt(measurementNoise(1))*randn; % 001
-        measurement4_01(j,1) = sqrt((exactPosX(j,1)-Anchor4(1,1))^2+(exactPosY(j,1)-Anchor4(2,1))^2) + sqrt(measurementNoise(2))*randn; % 01
-        measurement4_1(j,1) = sqrt((exactPosX(j,1)-Anchor4(1,1))^2+(exactPosY(j,1)-Anchor4(2,1))^2) + sqrt(measurementNoise(3))*randn; % 1
-        measurement4_10(j,1) = sqrt((exactPosX(j,1)-Anchor4(1,1))^2+(exactPosY(j,1)-Anchor4(2,1))^2) + sqrt(measurementNoise(4))*randn; % 10
-        measurement4_100(j,1) = sqrt((exactPosX(j,1)-Anchor4(1,1))^2+(exactPosY(j,1)-Anchor4(2,1))^2) + sqrt(measurementNoise(5))*randn; % 100
+        measurement4_001(j,1) = sqrt((exactPosX(j,1)-Anchor.a4(1,1))^2+(exactPosY(j,1)-Anchor.a4(2,1))^2) + sqrt(measurementNoise(1))*randn; % 001
+        measurement4_01(j,1) = sqrt((exactPosX(j,1)-Anchor.a4(1,1))^2+(exactPosY(j,1)-Anchor.a4(2,1))^2) + sqrt(measurementNoise(2))*randn; % 01
+        measurement4_1(j,1) = sqrt((exactPosX(j,1)-Anchor.a4(1,1))^2+(exactPosY(j,1)-Anchor.a4(2,1))^2) + sqrt(measurementNoise(3))*randn; % 1
+        measurement4_10(j,1) = sqrt((exactPosX(j,1)-Anchor.a4(1,1))^2+(exactPosY(j,1)-Anchor.a4(2,1))^2) + sqrt(measurementNoise(4))*randn; % 10
+        measurement4_100(j,1) = sqrt((exactPosX(j,1)-Anchor.a4(1,1))^2+(exactPosY(j,1)-Anchor.a4(2,1))^2) + sqrt(measurementNoise(5))*randn; % 100
     end
     % File Write
     fprintf(fileID001_1,'%.3f ',measurement1_001);
