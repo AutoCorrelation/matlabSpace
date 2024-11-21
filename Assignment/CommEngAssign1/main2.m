@@ -24,9 +24,9 @@ S_f_DSB_SC = fftshift(fft(s_t_DSB_SC))*Ts;
 power_DSB_SC = mean(s_t_DSB_SC.*s_t_DSB_SC);
 
 %% FM
-k_f2 = 75000/max(abs(m_t));
+k_f = 75000/max(abs(m_t));
 theta_t = getIntegral(m_t,Ts);
-s_t_FM2 = Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f2*theta_t);
+s_t_FM2 = Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f*theta_t);
 S_f_FM2 = fftshift(fft(s_t_FM2))*Ts;
 power_FM = mean(s_t_FM2.*s_t_FM2);
 
@@ -43,22 +43,15 @@ LO_DSB_SC_A = 2*cos(2*pi*demodulationA.fc*t + demodulationA.theta);
 LO_DSB_SC_B = 2*cos(2*pi*demodulationB.fc*t + demodulationB.theta);
 LO_DSB_SC_C = 2*cos(2*pi*demodulationC.fc*t + demodulationC.theta);
 LO_DSB_SC_D = 2*cos(2*pi*demodulationD.fc*t + demodulationD.theta);
-v_t_DSB_SC_A = r_t_DSB_SC_A .* LO_DSB_SC_A;
-v_t_DSB_SC_B = r_t_DSB_SC_B .* LO_DSB_SC_B;
-v_t_DSB_SC_C = r_t_DSB_SC_C .* LO_DSB_SC_C;
-v_t_DSB_SC_D = r_t_DSB_SC_D .* LO_DSB_SC_D;
-V_f_DSB_SC_A = fftshift(fft(v_t_DSB_SC_A))*Ts;
-V_f_DSB_SC_B = fftshift(fft(v_t_DSB_SC_B))*Ts;
-V_f_DSB_SC_C = fftshift(fft(v_t_DSB_SC_C))*Ts;
-V_f_DSB_SC_D = fftshift(fft(v_t_DSB_SC_D))*Ts;
-M_f_hat_DSB_SC_A = lowpass(V_f_DSB_SC_A,177000);
-M_f_hat_DSB_SC_B = lowpass(V_f_DSB_SC_B,177000);
-M_f_hat_DSB_SC_C = lowpass(V_f_DSB_SC_C,177000);
-M_f_hat_DSB_SC_D = lowpass(V_f_DSB_SC_D,177000);
-m_t_hat_DSB_SC_A = ifft(ifftshift(M_f_DSB_SC_hat_A))/Ts;
-m_t_hat_DSB_SC_B = ifft(ifftshift(M_f_DSB_SC_hat_B))/Ts;
-m_t_hat_DSB_SC_C = ifft(ifftshift(M_f_DSB_SC_hat_C))/Ts;
-m_t_hat_DSB_SC_D = ifft(ifftshift(M_f_DSB_SC_hat_D))/Ts;
+m_t_DSB_SC_A = demoldulate_DSB_SC(r_t_DSB_SC_A,LO_DSB_SC_A);
+m_t_DSB_SC_B = demoldulate_DSB_SC(r_t_DSB_SC_B,LO_DSB_SC_B);
+m_t_DSB_SC_C = demoldulate_DSB_SC(r_t_DSB_SC_C,LO_DSB_SC_C);
+m_t_DSB_SC_D = demoldulate_DSB_SC(r_t_DSB_SC_D,LO_DSB_SC_D);
+
+M_f_DSB_SC_A = fftshift(fft(m_t_DSB_SC_A))*Ts;
+M_f_DSB_SC_B = fftshift(fft(m_t_DSB_SC_B))*Ts;
+M_f_DSB_SC_C = fftshift(fft(m_t_DSB_SC_C))*Ts;
+M_f_DSB_SC_D = fftshift(fft(m_t_DSB_SC_D))*Ts;
 
 %% FM Demodulate
 FM_Noise_A = sqrt(power_FM/10^(demodulationA.SNR/10))*randn(N,1);
@@ -73,29 +66,52 @@ LO_FM_A = exp(1j*2*pi*demodulationA.fc*t+demodulationA.theta);
 LO_FM_B = exp(1j*2*pi*demodulationB.fc*t+demodulationB.theta);
 LO_FM_C = exp(1j*2*pi*demodulationC.fc*t+demodulationC.theta);
 LO_FM_D = exp(1j*2*pi*demodulationD.fc*t+demodulationD.theta);
-R_f_FM_A = fftshift(fft(r_t_FM_A))*Ts;
-R_f_FM_B = fftshift(fft(r_t_FM_B))*Ts;
-R_f_FM_C = fftshift(fft(r_t_FM_C))*Ts;
-R_f_FM_D = fftshift(fft(r_t_FM_D))*Ts;
-Hilbert_f_FM_A = -1j*R_f_FM_A.*sign(f);
-Hilbert_f_FM_B = -1j*R_f_FM_B.*sign(f);
-Hilbert_f_FM_C = -1j*R_f_FM_C.*sign(f);
-Hilbert_f_FM_D = -1j*R_f_FM_D.*sign(f);
-m_t_hat_FM_A = ifft(ifftshift(Hilbert_f_FM_A))/Ts;
-m_t_hat_FM_B = ifft(ifftshift(Hilbert_f_FM_B))/Ts;
-m_t_hat_FM_C = ifft(ifftshift(Hilbert_f_FM_C))/Ts;
-m_t_hat_FM_D = ifft(ifftshift(Hilbert_f_FM_D))/Ts;
-phase_FM_A = unwrap(angle(m_t_hat_FM_A));
-phase_FM_B = unwrap(angle(m_t_hat_FM_B));
-phase_FM_C = unwrap(angle(m_t_hat_FM_C));
-phase_FM_D = unwrap(angle(m_t_hat_FM_D));
 
-% FM 복조하기
+m_t_FM_A = demoldulate_FM(r_t_FM_A,LO_FM_A,Ts,k_f);
+m_t_FM_B = demoldulate_FM(r_t_FM_B,LO_FM_B,Ts,k_f);
+m_t_FM_C = demoldulate_FM(r_t_FM_C,LO_FM_C,Ts,k_f);
+m_t_FM_D = demoldulate_FM(r_t_FM_D,LO_FM_D,Ts,k_f);
 
+M_f_FM_A = fftshift(fft(m_t_FM_A))*Ts;
+M_f_FM_B = fftshift(fft(m_t_FM_B))*Ts;
+M_f_FM_C = fftshift(fft(m_t_FM_C))*Ts;
+M_f_FM_D = fftshift(fft(m_t_FM_D))*Ts;
 
+%% Plot
+figure;
+subplot(3,2,1);
+plot(f,abs(M_f));
+title('Magnitude Spectrum of m(t)');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,2);
+plot(f,abs(M_f_FM_A));
+% plot(f,abs(M_f_DSB_SC_A));
+title('Magnitude Spectrum of m(t) (FM Demodulation A)');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,3);
+plot(f,abs(M_f_FM_B));
+% plot(f,abs(M_f_DSB_SC_B));
+title('Magnitude Spectrum of m(t) (FM Demodulation B)');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,4);
+plot(f,abs(M_f_FM_C));
+% plot(f,abs(M_f_DSB_SC_C));
+title('Magnitude Spectrum of m(t) M_f_DSB_SC_A');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,5);
+plot(f,abs(M_f_FM_D));
+% plot(f,abs(M_f_DSB_SC_D));
+title('Magnitude Spectrum of m(t) M_f_DSB_SC_B');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
 
-
-
+%% Output file
+FM_m_t_DSB_SC_D = m_t_FM_D./max(abs(m_t_FM_D(:)));
+audiowrite('output.wav',FM_m_t_DSB_SC_D, Fs);
 
 %% Functions
 function output = getIntegral(input,Ts)
@@ -114,7 +130,48 @@ end
 
 function output = lowpass(input,Bw)
     output = zeros(size(input));
-    for i = -Bw:Bw
-        output(i)=input(i);
+    centre = ceil((length(input)+1)/2);
+    for i = centre-Bw:centre+Bw
+        output(i) = input(i);
     end
 end
+
+function y = my_hilbert(x)
+    N = length(x);
+    
+    % Step 1: FFT 계산
+    X = fft(x);
+    
+    % Step 2: 필터 벡터 h 생성
+    h = zeros(N, 1);
+    h(1) = 1;  % DC 성분
+    
+    if mod(N,2) == 0  % N이 짝수인 경우
+        h(2:N/2) = 2;
+        h(N/2+1) = 1;  % Nyquist 주파수
+    else  % N이 홀수인 경우
+        h(2:(N+1)/2) = 2;
+    end
+    
+    % Step 3: FFT 결과와 필터의 요소별 곱
+    Y = X .* h;
+    
+    % Step 4: IFFT 계산
+    y = ifft(Y);
+end
+
+function output = demoldulate_DSB_SC(input,LO)
+    temp1 = input .* LO;
+    temp2 = fftshift(fft(temp1));
+    temp3 = lowpass(temp2,22000);
+    output = ifft(ifftshift(temp3));
+end
+
+function output = demoldulate_FM(input,LO,Ts,k_f)
+    temp1 = my_hilbert(input)./LO;
+
+temp2 = unwrap(angle(temp1));
+temp3 = getDerivative(temp2,Ts);
+output = temp3/(2*pi*k_f);
+end
+

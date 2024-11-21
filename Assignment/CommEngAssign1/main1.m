@@ -3,20 +3,24 @@ clc; clear; close all;
 %% Load audio file
 Audio = audioinfo('sample.wav');
 [m_t, Fs] = audioread('sample.wav');
-Ts = 1 / Fs;
 N = Audio.TotalSamples;
+
+%% Parameters
+Ts = 1 / Fs;
 df = Fs / N;
 t = (0:Ts:(N-1)*Ts).';
 f = ((-N/2)*df:df:(N/2-1)*df).';
-
-%% Parameters
 Carrier = struct('Amplitude', 1, 'Frequency', 1e5, 'Phase', 0);
-c_t = Carrier.Amplitude * cos(2 * pi * Carrier.Frequency * t + Carrier.Phase);
+c_t = ...
+    Carrier.Amplitude * cos(2 * pi * Carrier.Frequency * t + Carrier.Phase);
 M_f = fftshift(fft(m_t))*Ts;
+f_m = 22050;
+% M_f = lowpass(M_f,1000000);
+% m_t = ifft(ifftshift(M_f))/Ts;
 
 %% DSB-LC
-k_a = 0.9/max(abs(m_t));
-s_t_DSB_LC = (1 + k_a * m_t) .* c_t;
+k_a = 0.95/max(abs(m_t));
+s_t_DSB_LC = (1 + k_a .* m_t) .* c_t;
 S_f_DSB_LC = fftshift(fft(s_t_DSB_LC))*Ts;
 
 %% DSB-SC
@@ -36,9 +40,13 @@ S_f_SSB_LSB = fftshift(fft(s_t_SSB_LSB))*Ts;
 %% FM
 k_f1 = 7500/max(abs(m_t));
 k_f2 = 75000/max(abs(m_t));
+beta1 = 7500/f_m;
+beta2 = 75000/f_m;
 theta_t = getIntegral(m_t,Ts);
-s_t_FM1 = Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f1*theta_t);
-s_t_FM2 = Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f2*theta_t);
+s_t_FM1 = ...
+    Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f1*theta_t);
+s_t_FM2 = ...
+    Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f2*theta_t);
 S_f_FM1 = fftshift(fft(s_t_FM1))*Ts;
 S_f_FM2 = fftshift(fft(s_t_FM2))*Ts;
 
@@ -89,5 +97,13 @@ function output = getIntegral(input,Ts)
     output = zeros(size(input));
     for i = 2:length(input)
         output(i) = output(i-1) + input(i) * Ts;
+    end
+end
+
+function output = lowpass(input,Bw)
+    output = zeros(size(input));
+    centre = ceil((length(input)+1)/2);
+    for i = centre-Bw:centre+Bw
+        output(i) = input(i);
     end
 end
