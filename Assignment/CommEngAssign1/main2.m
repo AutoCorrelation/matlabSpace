@@ -78,7 +78,39 @@ M_f_FM_B = fftshift(fft(m_t_FM_B))*Ts;
 M_f_FM_C = fftshift(fft(m_t_FM_C))*Ts;
 M_f_FM_D = fftshift(fft(m_t_FM_D))*Ts;
 
-%% Plot
+%% Plot DSB-SC
+figure;
+subplot(3,2,1);
+plot(f,abs(M_f));
+title('Magnitude Spectrum of m(t)');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,2);
+% plot(f,abs(M_f_FM_A));
+plot(f,abs(M_f_DSB_SC_A));
+title('Magnitude Spectrum of m(t) (DSB-SC Demodulation A)');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,3);
+% plot(f,abs(M_f_FM_B));
+plot(f,abs(M_f_DSB_SC_B));
+title('Magnitude Spectrum of m(t) (DSB-SC Demodulation B)');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,4);
+% plot(f,abs(M_f_FM_C));
+plot(f,abs(M_f_DSB_SC_C));
+title('Magnitude Spectrum of m(t) (DSB-SC Demodulation C)');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,5);
+% plot(f,abs(M_f_FM_D));
+plot(f,abs(M_f_DSB_SC_D));
+title('Magnitude Spectrum of m(t) (DSB-SC Demodulation D)');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+
+%% Plot - FM
 figure;
 subplot(3,2,1);
 plot(f,abs(M_f));
@@ -98,17 +130,18 @@ title('Magnitude Spectrum of m(t) (FM Demodulation B)');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,4);
-% plot(f,abs(M_f_FM_C));
-plot(f,abs(M_f_DSB_SC_C));
-title('Magnitude Spectrum of m(t) M_f_DSB_SC_A');
+plot(f,abs(M_f_FM_C));
+% plot(f,abs(M_f_DSB_SC_C));
+title('Magnitude Spectrum of m(t) (FM Demodulation C)');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,5);
 % plot(f,abs(M_f_FM_D));
 plot(f,abs(M_f_DSB_SC_D));
-title('Magnitude Spectrum of m(t) M_f_DSB_SC_B');
+title('Magnitude Spectrum of m(t) (FM Demodulation D)');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
+
 
 %% Output file
 FM_m_t_DSB_SC_D = m_t_DSB_SC_C./max(abs(m_t_DSB_SC_C(:)));
