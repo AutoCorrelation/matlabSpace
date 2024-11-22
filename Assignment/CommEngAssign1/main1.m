@@ -15,7 +15,7 @@ c_t = ...
     Carrier.Amplitude * cos(2 * pi * Carrier.Frequency * t + Carrier.Phase);
 M_f = fftshift(fft(m_t))*Ts;
 f_m = 22050;
-% M_f = lowpass(M_f,1000000);
+% M_f = lpf(M_f,1000000);
 % m_t = ifft(ifftshift(M_f))/Ts;
 
 %% DSB-LC
@@ -100,10 +100,11 @@ function output = getIntegral(input,Ts)
     end
 end
 
-function output = lowpass(input,Bw)
+function output = lpf(input,Bw)
     output = zeros(size(input));
     centre = ceil((length(input)+1)/2);
     for i = centre-Bw:centre+Bw
         output(i) = input(i);
     end
 end
+function output =bpf(input,)

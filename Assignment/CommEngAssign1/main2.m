@@ -11,7 +11,7 @@ f = ((-N/2)*df:df:(N/2-1)*df).';
 m_t = lowpass
 %% Parameters
 Carrier = struct('Amplitude', 1, 'Frequency', 1e5, 'Phase', 0);
-c_t = Carrier.Amplitude * cos(2 * pi * Carrier.Frequency * t + Carrier.Phase);
+c_t = Carrier.Amplitude*cos(2*pi*Carrier.Frequency*t+Carrier.Phase);
 M_f = fftshift(fft(m_t))*Ts;
 demodulationA = struct('SNR',0,'fc',1e5,'theta',0);
 demodulationB = struct('SNR',30,'fc',1e5,'theta',0);
@@ -26,7 +26,7 @@ power_DSB_SC = mean(s_t_DSB_SC.*s_t_DSB_SC);
 %% FM
 k_f = 75000/max(abs(m_t));
 theta_t = getIntegral(m_t,Ts);
-s_t_FM2 = Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f*theta_t);
+s_t_FM2 = Carrier.Amplitude*cos(2*pi*Carrier.Frequency*t+2*pi*k_f*theta_t);
 S_f_FM2 = fftshift(fft(s_t_FM2))*Ts;
 power_FM = mean(s_t_FM2.*s_t_FM2);
 
@@ -43,6 +43,7 @@ LO_DSB_SC_A = 2*cos(2*pi*demodulationA.fc*t + demodulationA.theta);
 LO_DSB_SC_B = 2*cos(2*pi*demodulationB.fc*t + demodulationB.theta);
 LO_DSB_SC_C = 2*cos(2*pi*demodulationC.fc*t + demodulationC.theta);
 LO_DSB_SC_D = 2*cos(2*pi*demodulationD.fc*t + demodulationD.theta);
+
 m_t_DSB_SC_A = demoldulate_DSB_SC(r_t_DSB_SC_A,LO_DSB_SC_A);
 m_t_DSB_SC_B = demoldulate_DSB_SC(r_t_DSB_SC_B,LO_DSB_SC_B);
 m_t_DSB_SC_C = demoldulate_DSB_SC(r_t_DSB_SC_C,LO_DSB_SC_C);
@@ -117,14 +118,14 @@ title('Magnitude Spectrum of m(t)');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,2);
-plot(f,abs(M_f_FM_A));
-% plot(f,abs(M_f_DSB_SC_A));
+% plot(f,abs(M_f_FM_A));
+plot(f,abs(M_f_DSB_SC_A));
 title('Magnitude Spectrum of m(t) (FM Demodulation A)');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,3);
-plot(f,abs(M_f_FM_B));
-% plot(f,abs(M_f_DSB_SC_B));
+% plot(f,abs(M_f_FM_B));
+plot(f,abs(M_f_DSB_SC_B));
 title('Magnitude Spectrum of m(t) (FM Demodulation B)');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
@@ -135,8 +136,8 @@ title('Magnitude Spectrum of m(t) (FM Demodulation C)');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,5);
-plot(f,abs(M_f_FM_D));
-% plot(f,abs(M_f_DSB_SC_D));
+% plot(f,abs(M_f_FM_D));
+plot(f,abs(M_f_DSB_SC_D));
 title('Magnitude Spectrum of m(t) (FM Demodulation D)');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
@@ -197,11 +198,12 @@ function output = demoldulate_DSB_SC(input,LO)
     temp1 = input .* LO;
     temp2 = fftshift(fft(temp1));
     temp3 = lowpass(temp2,1500000);
+    temp3 = lowpass(temp2,1500000);
     output = ifft(ifftshift(temp3));
 end
 
 function output = demoldulate_FM(input,LO,Ts,k_f)
-    temp1 = my_hilbert(input)./LO;
+temp1 = my_hilbert(input)./LO;
 
 temp2 = unwrap(angle(temp1));
 temp3 = getDerivative(temp2,Ts);
