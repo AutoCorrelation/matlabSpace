@@ -8,7 +8,7 @@ N = Audio.TotalSamples;
 df = Fs / N;
 t = (0:Ts:(N-1)*Ts).';
 f = ((-N/2)*df:df:(N/2-1)*df).';
-
+m_t = lowpass
 %% Parameters
 Carrier = struct('Amplitude', 1, 'Frequency', 1e5, 'Phase', 0);
 c_t = Carrier.Amplitude * cos(2 * pi * Carrier.Frequency * t + Carrier.Phase);
@@ -110,7 +110,7 @@ xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 
 %% Plot - FM
-figure;
+figure(2)
 subplot(3,2,1);
 plot(f,abs(M_f));
 title('Magnitude Spectrum of m(t)');
@@ -143,7 +143,7 @@ ylabel('Magnitude');
 
 
 %% Output file
-FM_m_t_DSB_SC_D = m_t_FM_D./max(abs(m_t_FM_D(:)));
+FM_m_t_DSB_SC_D = m_t_DSB_SC_A./max(abs(m_t_DSB_SC_A(:)));
 audiowrite('output.wav',FM_m_t_DSB_SC_D, Fs);
 
 %% Functions
@@ -196,7 +196,7 @@ end
 function output = demoldulate_DSB_SC(input,LO)
     temp1 = input .* LO;
     temp2 = fftshift(fft(temp1));
-    temp3 = lowpass(temp2,22000);
+    temp3 = lowpass(temp2,1500000);
     output = ifft(ifftshift(temp3));
 end
 
