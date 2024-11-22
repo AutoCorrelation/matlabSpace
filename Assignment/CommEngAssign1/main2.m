@@ -3,13 +3,13 @@ clc; clear; close all;
 %% Load audio file
 Audio = audioinfo('sample.wav');
 [m_t, Fs] = audioread('sample.wav');
-Ts = 1 / Fs;
 N = Audio.TotalSamples;
+
+%% Parameters
+Ts = 1 / Fs;
 df = Fs / N;
 t = (0:Ts:(N-1)*Ts).';
 f = ((-N/2)*df:df:(N/2-1)*df).';
-m_t = lowpass
-%% Parameters
 Carrier = struct('Amplitude', 1, 'Frequency', 1e5, 'Phase', 0);
 c_t = Carrier.Amplitude*cos(2*pi*Carrier.Frequency*t+Carrier.Phase);
 M_f = fftshift(fft(m_t))*Ts;
@@ -17,6 +17,9 @@ demodulationA = struct('SNR',0,'fc',1e5,'theta',0);
 demodulationB = struct('SNR',30,'fc',1e5,'theta',0);
 demodulationC = struct('SNR',30,'fc',1e5-1,'theta',0);
 demodulationD = struct('SNR',30,'fc',1e5,'theta',89*pi/180);
+
+% M_f = lpf(M_f,44000);
+% m_t = ifft(ifftshift(M_f))/Ts;
 
 %% DSB-SC
 s_t_DSB_SC = m_t .* c_t;
@@ -26,9 +29,9 @@ power_DSB_SC = mean(s_t_DSB_SC.*s_t_DSB_SC);
 %% FM
 k_f = 75000/max(abs(m_t));
 theta_t = getIntegral(m_t,Ts);
-s_t_FM2 = Carrier.Amplitude*cos(2*pi*Carrier.Frequency*t+2*pi*k_f*theta_t);
-S_f_FM2 = fftshift(fft(s_t_FM2))*Ts;
-power_FM = mean(s_t_FM2.*s_t_FM2);
+s_t_FM = Carrier.Amplitude*cos(2*pi*Carrier.Frequency*t+2*pi*k_f*theta_t);
+S_f_FM = fftshift(fft(s_t_FM))*Ts;
+power_FM = mean(s_t_FM.*s_t_FM);
 
 %% DSB-SC Demodulate
 DSB_SC_Noise_A = sqrt(power_DSB_SC/10^(demodulationA.SNR/10))*randn(N,1);
@@ -44,10 +47,10 @@ LO_DSB_SC_B = 2*cos(2*pi*demodulationB.fc*t + demodulationB.theta);
 LO_DSB_SC_C = 2*cos(2*pi*demodulationC.fc*t + demodulationC.theta);
 LO_DSB_SC_D = 2*cos(2*pi*demodulationD.fc*t + demodulationD.theta);
 
-m_t_DSB_SC_A = demoldulate_DSB_SC(r_t_DSB_SC_A,LO_DSB_SC_A);
-m_t_DSB_SC_B = demoldulate_DSB_SC(r_t_DSB_SC_B,LO_DSB_SC_B);
-m_t_DSB_SC_C = demoldulate_DSB_SC(r_t_DSB_SC_C,LO_DSB_SC_C);
-m_t_DSB_SC_D = demoldulate_DSB_SC(r_t_DSB_SC_D,LO_DSB_SC_D);
+m_t_DSB_SC_A = demoldulate_DSB_SC(r_t_DSB_SC_A,LO_DSB_SC_A,df);
+m_t_DSB_SC_B = demoldulate_DSB_SC(r_t_DSB_SC_B,LO_DSB_SC_B,df);
+m_t_DSB_SC_C = demoldulate_DSB_SC(r_t_DSB_SC_C,LO_DSB_SC_C,df);
+m_t_DSB_SC_D = demoldulate_DSB_SC(r_t_DSB_SC_D,LO_DSB_SC_D,df);
 
 M_f_DSB_SC_A = fftshift(fft(m_t_DSB_SC_A))*Ts;
 M_f_DSB_SC_B = fftshift(fft(m_t_DSB_SC_B))*Ts;
@@ -59,10 +62,10 @@ FM_Noise_A = sqrt(power_FM/10^(demodulationA.SNR/10))*randn(N,1);
 FM_Noise_B = sqrt(power_FM/10^(demodulationB.SNR/10))*randn(N,1);
 FM_Noise_C = sqrt(power_FM/10^(demodulationC.SNR/10))*randn(N,1);
 FM_Noise_D = sqrt(power_FM/10^(demodulationD.SNR/10))*randn(N,1);
-r_t_FM_A = s_t_FM2 + FM_Noise_A;
-r_t_FM_B = s_t_FM2 + FM_Noise_B;
-r_t_FM_C = s_t_FM2 + FM_Noise_C;
-r_t_FM_D = s_t_FM2 + FM_Noise_D;
+r_t_FM_A = s_t_FM + FM_Noise_A;
+r_t_FM_B = s_t_FM + FM_Noise_B;
+r_t_FM_C = s_t_FM + FM_Noise_C;
+r_t_FM_D = s_t_FM + FM_Noise_D;
 LO_FM_A = exp(1j*2*pi*demodulationA.fc*t+demodulationA.theta);
 LO_FM_B = exp(1j*2*pi*demodulationB.fc*t+demodulationB.theta);
 LO_FM_C = exp(1j*2*pi*demodulationC.fc*t+demodulationC.theta);
@@ -82,31 +85,36 @@ M_f_FM_D = fftshift(fft(m_t_FM_D))*Ts;
 figure;
 subplot(3,2,1);
 plot(f,abs(M_f));
-title('Magnitude Spectrum of m(t)');
+title('|M(f)|');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,2);
-% plot(f,abs(M_f_FM_A));
-plot(f,abs(M_f_DSB_SC_A));
-title('Magnitude Spectrum of m(t) (DSB-SC Demodulation A)');
+plot(f,abs(S_f_DSB_SC));
+title('|S(f)|');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,3);
-% plot(f,abs(M_f_FM_B));
-plot(f,abs(M_f_DSB_SC_B));
-title('Magnitude Spectrum of m(t) (DSB-SC Demodulation B)');
+% plot(f,abs(M_f_FM_A));
+plot(f,abs(M_f_DSB_SC_A));
+title('A) SNR=0dB f_c=100kHz \theta=0');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,4);
-% plot(f,abs(M_f_FM_C));
-plot(f,abs(M_f_DSB_SC_C));
-title('Magnitude Spectrum of m(t) (DSB-SC Demodulation C)');
+% plot(f,abs(M_f_FM_B));
+plot(f,abs(M_f_DSB_SC_B));
+title('B) SNR=30dB f_c=100kHz \theta=0');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,5);
+% plot(f,abs(M_f_FM_C));
+plot(f,abs(M_f_DSB_SC_C));
+title('C) SNR=30dB f_c=99.999kHz \theta=0');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,6);
 % plot(f,abs(M_f_FM_D));
 plot(f,abs(M_f_DSB_SC_D));
-title('Magnitude Spectrum of m(t) (DSB-SC Demodulation D)');
+title('D) SNR=30dB f_c=100kHz \theta=89pi/180');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 
@@ -114,38 +122,58 @@ ylabel('Magnitude');
 figure(2)
 subplot(3,2,1);
 plot(f,abs(M_f));
-title('Magnitude Spectrum of m(t)');
+title('|M(f)|');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,2);
-% plot(f,abs(M_f_FM_A));
-plot(f,abs(M_f_DSB_SC_A));
-title('Magnitude Spectrum of m(t) (FM Demodulation A)');
+plot(f,abs(S_f_FM));
+title('|S(f)|');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,3);
-% plot(f,abs(M_f_FM_B));
-plot(f,abs(M_f_DSB_SC_B));
-title('Magnitude Spectrum of m(t) (FM Demodulation B)');
+plot(f,abs(M_f_FM_A));
+% plot(f,abs(M_f_DSB_SC_A));
+title('A) SNR=0dB f_c=100kHz \theta=0');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,4);
-plot(f,abs(M_f_FM_C));
-% plot(f,abs(M_f_DSB_SC_C));
-title('Magnitude Spectrum of m(t) (FM Demodulation C)');
+plot(f,abs(M_f_FM_B));
+% plot(f,abs(M_f_DSB_SC_B));
+title('B) SNR=30dB f_c=100kHz \theta=0');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 subplot(3,2,5);
-% plot(f,abs(M_f_FM_D));
-plot(f,abs(M_f_DSB_SC_D));
-title('Magnitude Spectrum of m(t) (FM Demodulation D)');
+plot(f,abs(M_f_FM_C));
+% plot(f,abs(M_f_DSB_SC_C));
+title('C) SNR=30dB f_c=99.999kHz \theta=0');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+subplot(3,2,6);
+plot(f,abs(M_f_FM_D));
+% plot(f,abs(M_f_DSB_SC_D));
+title('D) SNR=30dB f_c=100kHz \theta=89pi/180');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
 
 
 %% Output file
-FM_m_t_DSB_SC_D = m_t_DSB_SC_A./max(abs(m_t_DSB_SC_A(:)));
-audiowrite('output.wav',FM_m_t_DSB_SC_D, Fs);
+DSB_demod_A = m_t_DSB_SC_A./max(abs(m_t_DSB_SC_A));
+audiowrite('outputDSB_A.wav', DSB_demod_A, Fs);
+DSB_demod_B = m_t_DSB_SC_B./max(abs(m_t_DSB_SC_B));
+audiowrite('outputDSB_B.wav', DSB_demod_B, Fs);
+DSB_demod_C = m_t_DSB_SC_C./max(abs(m_t_DSB_SC_C));
+audiowrite('outputDSB_C.wav', DSB_demod_C, Fs);
+DSB_demod_D = m_t_DSB_SC_D./max(abs(m_t_DSB_SC_D));
+audiowrite('outputDSB_D.wav', DSB_demod_D, Fs);
+
+FM_demod_A = m_t_FM_A./max(abs(m_t_FM_A));
+audiowrite('outputFM_A.wav', FM_demod_A, Fs);
+FM_demod_B = m_t_FM_B./max(abs(m_t_FM_B));
+audiowrite('outputFM_B.wav', FM_demod_B, Fs);
+FM_demod_C = m_t_FM_C./max(abs(m_t_FM_C));
+audiowrite('outputFM_C.wav', FM_demod_C, Fs);
+FM_demod_D = m_t_FM_D./max(abs(m_t_FM_D));
+audiowrite('outputFM_D.wav', FM_demod_D, Fs);
 
 %% Functions
 function output = getIntegral(input,Ts)
@@ -162,51 +190,41 @@ function output = getDerivative(input,Ts)
     end
 end
 
-function output = lowpass(input,Bw)
+function output = lpf(input,Bw,df)
     output = zeros(size(input));
     centre = ceil((length(input)+1)/2);
-    for i = centre-Bw:centre+Bw
+    for i = floor(centre-Bw/df):ceil(centre+Bw/df)
         output(i) = input(i);
     end
 end
 
 function y = my_hilbert(x)
+% from https://kr.mathworks.com/help/signal/ref/hilbert.html Algorithm.
     N = length(x);
-    
-    % Step 1: FFT 계산
+    % Step 1
     X = fft(x);
-    
-    % Step 2: 필터 벡터 h 생성
+    % Step 2
     h = zeros(N, 1);
-    h(1) = 1;  % DC 성분
-    
-    if mod(N,2) == 0  % N이 짝수인 경우
-        h(2:N/2) = 2;
-        h(N/2+1) = 1;  % Nyquist 주파수
-    else  % N이 홀수인 경우
-        h(2:(N+1)/2) = 2;
-    end
-    
-    % Step 3: FFT 결과와 필터의 요소별 곱
+    h(1) = 1;
+    h(N/2+1)=1;
+    h(2:N/2)=2;
+    % Step 3
     Y = X .* h;
-    
-    % Step 4: IFFT 계산
+    % Step 4
     y = ifft(Y);
 end
 
-function output = demoldulate_DSB_SC(input,LO)
+function output = demoldulate_DSB_SC(input,LO,df)
     temp1 = input .* LO;
     temp2 = fftshift(fft(temp1));
-    temp3 = lowpass(temp2,1500000);
-    temp3 = lowpass(temp2,1500000);
+    temp3 = lpf(temp2,22000,df);
     output = ifft(ifftshift(temp3));
 end
 
 function output = demoldulate_FM(input,LO,Ts,k_f)
-temp1 = my_hilbert(input)./LO;
-
-temp2 = unwrap(angle(temp1));
-temp3 = getDerivative(temp2,Ts);
-output = temp3/(2*pi*k_f);
+    temp1 = my_hilbert(input)./LO;
+    temp2 = unwrap(angle(temp1));
+    temp3 = getDerivative(temp2,Ts);
+    output = temp3/(2*pi*k_f);
 end
 

@@ -14,12 +14,12 @@ Carrier = struct('Amplitude', 1, 'Frequency', 1e5, 'Phase', 0);
 c_t = ...
     Carrier.Amplitude * cos(2 * pi * Carrier.Frequency * t + Carrier.Phase);
 M_f = fftshift(fft(m_t))*Ts;
-f_m = 22050;
-% M_f = lpf(M_f,1000000);
+
+% M_f = lpf(M_f,66000,df);
 % m_t = ifft(ifftshift(M_f))/Ts;
 
 %% DSB-LC
-k_a = 0.95/max(abs(m_t));
+k_a = 0.9/max(abs(m_t));
 s_t_DSB_LC = (1 + k_a .* m_t) .* c_t;
 S_f_DSB_LC = fftshift(fft(s_t_DSB_LC))*Ts;
 
@@ -40,8 +40,6 @@ S_f_SSB_LSB = fftshift(fft(s_t_SSB_LSB))*Ts;
 %% FM
 k_f1 = 7500/max(abs(m_t));
 k_f2 = 75000/max(abs(m_t));
-beta1 = 7500/f_m;
-beta2 = 75000/f_m;
 theta_t = getIntegral(m_t,Ts);
 s_t_FM1 = ...
     Carrier.Amplitude * cos(2*pi*Carrier.Frequency*t + 2*pi*k_f1*theta_t);
@@ -100,11 +98,10 @@ function output = getIntegral(input,Ts)
     end
 end
 
-function output = lpf(input,Bw)
+function output = lpf(input,Bw,df)
     output = zeros(size(input));
     centre = ceil((length(input)+1)/2);
-    for i = centre-Bw:centre+Bw
+    for i = floor(centre-Bw/df):ceil(centre+Bw/df)
         output(i) = input(i);
     end
 end
-function output =bpf(input,)
