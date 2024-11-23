@@ -18,7 +18,7 @@ demodulationB = struct('SNR',30,'fc',1e5,'theta',0);
 demodulationC = struct('SNR',30,'fc',1e5-1,'theta',0);
 demodulationD = struct('SNR',30,'fc',1e5,'theta',89*pi/180);
 
-% M_f = lpf(M_f,44000);
+% M_f = lpf(M_f,22000,df);
 % m_t = ifft(ifftshift(M_f))/Ts;
 
 %% DSB-SC

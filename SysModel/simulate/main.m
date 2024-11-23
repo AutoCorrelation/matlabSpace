@@ -1,12 +1,12 @@
 clear
 clc
-% close all
+close all
 
-iteration=1e3;
+iteration=1e5;
  
-AnchorMeasure(iteration);
-process_Simulation(iteration);
-LPF_ToA(iteration);
-KFpredict_ToA(iteration);
+% AnchorMeasure(iteration);
+% process_Simulation(iteration);
+% LPF_ToA(iteration);
+% KFpredict_ToA(iteration);
 KF_ToA(iteration);
 RMSE(iteration);

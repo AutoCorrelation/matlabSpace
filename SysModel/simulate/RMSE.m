@@ -1,5 +1,4 @@
 function RMSE(iteration)
-close all
 load("LSE.mat");
 load("est_state.mat")
 load("lpf_state.mat")
