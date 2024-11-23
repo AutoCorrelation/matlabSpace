@@ -152,14 +152,14 @@ for iter = 1:iteration
 end
 
 save('est_state.mat','est_state');
-save('est_covariance.mat','est_covariance');
-save('KalmanGain.mat','KalmanGain');
+% save('est_covariance.mat','est_covariance');
+% save('KalmanGain.mat','KalmanGain');
 n_variance = [1e-2; 1e-1; 1e0; 1e1; 1e2];
-a = mean(est_covariance.var01,5);
+a = mean(est_covariance.var01,3);
 for i = 1:num_sample
     buf(i,1) = trace(a(:,:,1,i));
 end
-
+figure;
 stem((1:num_sample),buf);
 title("estimation Error Covariance at variance 1")
 xlabel("step")
