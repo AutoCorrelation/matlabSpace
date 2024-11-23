@@ -1,4 +1,4 @@
-function AnchorMeasure(iteration)
+function preSimulation(iteration)
 % variables
 n_variance = [1e-2; 1e-1; 1e0; 1e1; 1e2];
 num_sample = 11;

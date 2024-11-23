@@ -4,10 +4,11 @@ close all
 
 iteration=1e3;
  
-AnchorMeasure(iteration);
-% process_Simulation(iteration);
-% LPF_ToA(iteration);
-% KFpredict_ToA(iteration);
-% KF_ToA(iteration);
-KF_ToA_modified(iteration);
+preSimulation(iteration);
+KFpredict_ToA(iteration);
+LPF_ToA(iteration);
+KF_ToA(iteration);
+KF_ToA_AdaptiveR(iteration);
+KF_ToA_AdaptiveQ(iteration);
+
 RMSE(iteration);

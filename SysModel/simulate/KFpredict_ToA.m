@@ -33,23 +33,28 @@ for a = 1:9
                     KFpredict_state.var10(:,iter,num,a) = [0;0];
                     KFpredict_state.var100(:,iter,num,a) =  [0;0];
                 otherwise
-                    velocity_var001 = (LSE.var001(:,iter,num) - KFpredict_state.var001(:,iter,num-1,a))./dt;
+                    % velocity_var001 = (LSE.var001(:,iter,num) - KFpredict_state.var001(:,iter,num-1,a))./dt;
+                    velocity_var001 = (LSE.var001(:,iter,num) - LSE.var001(:,iter,num-1))./dt;
                     prev_est_state_var001 = kalmanFilter_prediction(KFpredict_state.var001(:,iter,num-1,a),velocity_var001,meanSysnoise.var001);
                     KFpredict_state.var001(:,iter,num,a) = lowpassFilter(prev_est_state_var001,LSE.var001(:,iter,num),alpha);
 
-                    velocity_var01 = (LSE.var01(:,iter,num) - KFpredict_state.var01(:,iter,num-1,a))./dt;
+                    % velocity_var01 = (LSE.var01(:,iter,num) - KFpredict_state.var01(:,iter,num-1,a))./dt;
+                    velocity_var01 = (LSE.var01(:,iter,num) - LSE.var01(:,iter,num-1))./dt;
                     prev_est_state_var01 = kalmanFilter_prediction(KFpredict_state.var01(:,iter,num-1,a),velocity_var01,meanSysnoise.var01);
                     KFpredict_state.var01(:,iter,num,a) = lowpassFilter(prev_est_state_var01,LSE.var01(:,iter,num),alpha);
 
-                    velocity_var1 = (LSE.var1(:,iter,num) - KFpredict_state.var1(:,iter,num-1,a))./dt;
+                    % velocity_var1 = (LSE.var1(:,iter,num) - KFpredict_state.var1(:,iter,num-1,a))./dt;
+                    velocity_var1 = (LSE.var1(:,iter,num) - LSE.var1(:,iter,num-1))./dt;
                     prev_est_state_var1 = kalmanFilter_prediction(KFpredict_state.var1(:,iter,num-1,a),velocity_var1,meanSysnoise.var1);
                     KFpredict_state.var1(:,iter,num,a) = lowpassFilter(prev_est_state_var1,LSE.var1(:,iter,num),alpha);
 
-                    velocity_var10 = (LSE.var10(:,iter,num) - KFpredict_state.var10(:,iter,num-1,a))./dt;
+                    % velocity_var10 = (LSE.var10(:,iter,num) - KFpredict_state.var10(:,iter,num-1,a))./dt;
+                    velocity_var10 = (LSE.var10(:,iter,num) - LSE.var10(:,iter,num-1))./dt;
                     prev_est_state_var10 = kalmanFilter_prediction(KFpredict_state.var10(:,iter,num-1,a),velocity_var10,meanSysnoise.var10);
                     KFpredict_state.var10(:,iter,num,a) = lowpassFilter(prev_est_state_var10,LSE.var10(:,iter,num),alpha);
 
-                    velocity_var100 = (LSE.var100(:,iter,num) - KFpredict_state.var100(:,iter,num-1,a))./dt;
+                    % velocity_var100 = (LSE.var100(:,iter,num) - KFpredict_state.var100(:,iter,num-1,a))./dt;
+                    velocity_var100 = (LSE.var100(:,iter,num) - LSE.var100(:,iter,num-1))./dt;
                     prev_est_state_var100 = kalmanFilter_prediction(KFpredict_state.var100(:,iter,num-1,a),velocity_var100,meanSysnoise.var100);
                     KFpredict_state.var100(:,iter,num,a) = lowpassFilter(prev_est_state_var100,LSE.var100(:,iter,num),alpha);
             end
