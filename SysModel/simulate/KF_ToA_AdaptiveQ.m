@@ -114,37 +114,42 @@ for iter = 1:iteration
                 KalmanGain.var001(:,:,iter,num) = kalman_gain_001;
 
                 prev_est_state_var01 = AdaptiveQ_est_state.var01(:,iter,num-1);
-                prev_estimate_cov_001 = est_covariance.var01(:,:,iter,num-1);
-                [est_state_var01, est_covariance_var01, kalman_gain_01] = kalmanFilter(prev_est_state_var01,prev_estimate_cov_001,velocity_var01,Q.var01,Rmean.var01(:,:,1,num),Z.var01(:,1,iter,num),meanSysnoise.var01);
+                prev_estimate_cov_01 = est_covariance.var01(:,:,iter,num-1);
+                [est_state_var01, est_covariance_var01, kalman_gain_01] = kalmanFilter(prev_est_state_var01,prev_estimate_cov_01,velocity_var01,Q.var01,Rmean.var01(:,:,1,num),Z.var01(:,1,iter,num),meanSysnoise.var01);
                 AdaptiveQ_est_state.var01(:,iter,num) = est_state_var01;
                 est_covariance.var01(:,:,iter,num) = est_covariance_var01;
                 velocity_var01 = (AdaptiveQ_est_state.var01(:,iter,num) - prev_est_state_var01)./dt;
                 KalmanGain.var01(:,:,iter,num) = kalman_gain_01;
 
                 prev_est_state_var1 = AdaptiveQ_est_state.var1(:,iter,num-1);
-                prev_estimate_cov_001 = est_covariance.var1(:,:,iter,num-1);
-                [est_state_var1, est_covariance_var1, kalman_gain_1] = kalmanFilter(prev_est_state_var1,prev_estimate_cov_001,velocity_var1,Q.var1,Rmean.var1(:,:,1,num),Z.var1(:,1,iter,num),meanSysnoise.var1);
+                prev_estimate_cov_1 = est_covariance.var1(:,:,iter,num-1);
+                [est_state_var1, est_covariance_var1, kalman_gain_1] = kalmanFilter(prev_est_state_var1,prev_estimate_cov_1,velocity_var1,Q.var1,Rmean.var1(:,:,1,num),Z.var1(:,1,iter,num),meanSysnoise.var1);
                 AdaptiveQ_est_state.var1(:,iter,num) = est_state_var1;
                 est_covariance.var1(:,:,iter,num) = est_covariance_var1;
                 velocity_var1 = (AdaptiveQ_est_state.var1(:,iter,num) - prev_est_state_var1)./dt;
                 KalmanGain.var1(:,:,iter,num) = kalman_gain_1;
 
                 prev_est_state_var10 = AdaptiveQ_est_state.var10(:,iter,num-1);
-                prev_estimate_cov_001 = est_covariance.var10(:,:,iter,num-1);
-                
-                [est_state_var10, est_covariance_var10, kalman_gain_10] = kalmanFilter(prev_est_state_var10,prev_estimate_cov_001,velocity_var10,Q.var10,Rmean.var10(:,:,1,num),Z.var10(:,1,iter,num),meanSysnoise.var10);
+                prev_estimate_cov_10 = est_covariance.var10(:,:,iter,num-1);
+                [est_state_var10, est_covariance_var10, kalman_gain_10] = kalmanFilter(prev_est_state_var10,prev_estimate_cov_10,velocity_var10,Q.var10,Rmean.var10(:,:,1,num),Z.var10(:,1,iter,num),meanSysnoise.var10);
                 AdaptiveQ_est_state.var10(:,iter,num) = est_state_var10;
                 est_covariance.var10(:,:,iter,num) = est_covariance_var10;
                 velocity_var10 = (AdaptiveQ_est_state.var10(:,iter,num) - prev_est_state_var10)./dt;
                 KalmanGain.var10(:,:,iter,num) = kalman_gain_10;
 
                 prev_est_state_var100 = AdaptiveQ_est_state.var100(:,iter,num-1);
-                prev_estimate_cov_001 = est_covariance.var100(:,:,iter,num-1);
-                [est_state_var100, est_covariance_var100, kalman_gain_100] = kalmanFilter(prev_est_state_var100,prev_estimate_cov_001,velocity_var100,Q.var100,Rmean.var100(:,:,1,num),Z.var100(:,1,iter,num),meanSysnoise.var100);
+                prev_estimate_cov_100 = est_covariance.var100(:,:,iter,num-1);
+                [est_state_var100, est_covariance_var100, kalman_gain_100] = kalmanFilter(prev_est_state_var100,prev_estimate_cov_100,velocity_var100,Q.var100,Rmean.var100(:,:,1,num),Z.var100(:,1,iter,num),meanSysnoise.var100);
                 AdaptiveQ_est_state.var100(:,iter,num) = est_state_var100;
                 est_covariance.var100(:,:,iter,num) = est_covariance_var100;
                 velocity_var100 = (AdaptiveQ_est_state.var100(:,iter,num) - prev_est_state_var100)./dt;
                 KalmanGain.var100(:,:,iter,num) = kalman_gain_100;
+
+                Q.var001 = Q.var001 * exp(-0.005*num-3);
+                Q.var01 = Q.var01 * exp(-0.005*num-3);
+                Q.var1 = Q.var1 * exp(-0.005*num-3);
+                Q.var10 = Q.var10 * exp(-0.005*num-3);
+                Q.var100 = Q.var100 * exp(-0.005*num-3);                
         end
     end
 end
