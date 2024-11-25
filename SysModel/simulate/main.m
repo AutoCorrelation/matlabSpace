@@ -2,7 +2,7 @@ clear
 clc
 close all
 
-iteration=1e4;
+iteration=1e3;
  
 preSimulation(iteration);
 LPF_ToA(iteration);

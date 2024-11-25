@@ -16,17 +16,19 @@ for a = 1:9
         for num = 1:num_sample
             switch num
                 case 1
+                    lpf_state.var001(:,iter,num,a) = [0;0];
+                    lpf_state.var01(:,iter,num,a) = [0;0];
+                    lpf_state.var1(:,iter,num,a)  = [0;0];
+                    lpf_state.var10(:,iter,num,a) = [0;0];
+                    lpf_state.var100(:,iter,num,a) =  [0;0];
+
+                case 2
                     lpf_state.var001(:,iter,num,a) = LSE.var001(:,iter,num);
                     lpf_state.var01(:,iter,num,a) = LSE.var01(:,iter,num);
-                    lpf_state.var1(:,iter,num,a) = LSE.var1(:,iter,num);
+                    lpf_state.var1(:,iter,num,a)  = LSE.var1(:,iter,num);
                     lpf_state.var10(:,iter,num,a) = LSE.var10(:,iter,num);
-                    lpf_state.var100(:,iter,num,a) = LSE.var100(:,iter,num);
+                    lpf_state.var100(:,iter,num,a) =  LSE.var100(:,iter,num);
 
-                    % lpf_state.var001(:,iter,num,a) = [0;0];
-                    % lpf_state.var01(:,iter,num,a) = [0;0];
-                    % lpf_state.var1(:,iter,num,a)  = [0;0];
-                    % lpf_state.var10(:,iter,num,a) = [0;0];
-                    % lpf_state.var100(:,iter,num,a) =  [0;0];
                 otherwise
                     lpf_state.var001(:,iter,num,a) = lowpassFilter(lpf_state.var001(:,iter,num-1,a),LSE.var001(:,iter,num),alpha);
                     lpf_state.var01(:,iter,num,a) = lowpassFilter(lpf_state.var01(:,iter,num-1,a),LSE.var01(:,iter,num),alpha);

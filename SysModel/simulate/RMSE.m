@@ -15,7 +15,7 @@ lpf_mse_buf = zeros(length(n_variance),9);
 KFpredict_buf = zeros(length(n_variance),9);
 KF_mse = zeros(length(n_variance),1);
 KF_mseR = zeros(length(n_variance),1);
-KF_mseQ = zeros(length(n_variance),1);
+KF_mseQ_buf = zeros(length(n_variance),9);
 
 for iter = 1:iteration
     for num = 1:num_sample
@@ -36,7 +36,7 @@ for iter = 1:iteration
                 norm(lpf_state.var100(:,iter,num,a)-exactPos)...
                 ];
         end
-        
+
         for a = 1:9
             KFpredict_buf(:,a) = KFpredict_buf(:,a) + [...
                 norm(KFpredict_state.var001(:,iter,num,a)-exactPos);...
@@ -45,8 +45,16 @@ for iter = 1:iteration
                 norm(KFpredict_state.var10(:,iter,num,a)-exactPos);...
                 norm(KFpredict_state.var100(:,iter,num,a)-exactPos)...
                 ];
+
+            KF_mseQ_buf(:,a) = KF_mseQ_buf(:,a) + [...
+                norm(AdaptiveQ_est_state.var001(:,iter,num,a)-exactPos);...
+                norm(AdaptiveQ_est_state.var01(:,iter,num,a)-exactPos);...
+                norm(AdaptiveQ_est_state.var1(:,iter,num,a)-exactPos);...
+                norm(AdaptiveQ_est_state.var10(:,iter,num,a)-exactPos);...
+                norm(AdaptiveQ_est_state.var100(:,iter,num,a)-exactPos)...
+                ];
         end
-        
+
         KF_mse = KF_mse + [...
             norm(est_state.var001(:,iter,num)-exactPos);...
             norm(est_state.var01(:,iter,num)-exactPos);...
@@ -61,13 +69,6 @@ for iter = 1:iteration
             norm(AdaptiveR_est_state.var10(:,iter,num)-exactPos);...
             norm(AdaptiveR_est_state.var100(:,iter,num)-exactPos)...
             ];
-        KF_mseQ = KF_mseQ + [...
-            norm(AdaptiveQ_est_state.var001(:,iter,num)-exactPos);...
-            norm(AdaptiveQ_est_state.var01(:,iter,num)-exactPos);...
-            norm(AdaptiveQ_est_state.var1(:,iter,num)-exactPos);...
-            norm(AdaptiveQ_est_state.var10(:,iter,num)-exactPos);...
-            norm(AdaptiveQ_est_state.var100(:,iter,num)-exactPos)...
-            ];
     end
 end
 mse = mse./(iteration * num_sample);
@@ -77,22 +78,25 @@ lpf_mse = lpf_mse_min./(iteration * num_sample);
 KFpredict_mse = KFpredict_min./(iteration * num_sample);
 KF_mse = KF_mse./(iteration * num_sample);
 KF_mseR = KF_mseR./(iteration * num_sample);
-KF_mseQ = KF_mseQ./(iteration * num_sample);
+[KF_mseQ_min,optimal_gamma] = min(KF_mseQ_buf,[],2);
+KF_mseQ = KF_mseQ_min./(iteration * num_sample);
 
 semilogx(n_variance,mse);
 hold on
 semilogx(n_variance,lpf_mse);
 semilogx(n_variance,KFpredict_mse);
 semilogx(n_variance,KF_mse);
-% semilogx(n_variance,KFenhanceQ_mse);
+
 semilogx(n_variance,KF_mseR);
 semilogx(n_variance,KF_mseQ);
 title("err according to measurement noise");
 xlabel("variance");
 ylabel("err");
 legend("ToA","LPF+ToA","KF(predict)+ToA","KF+ToA","KF+ToA(R)","KF+ToA(Q)");
+% legend("ToA","LPF+ToA","KF(predict)+ToA","KF+ToA","KF+ToA(R)");
 grid on
 disp("optimal alpha: "+optimal_alpha);
 disp("optimal alpha_predict: "+optimal_alpha_predict);
-% disp("optimal alpha_enhanceQ: "+optimal_alpha_enhanceQ);
+disp("optimal gamma: "+optimal_gamma);
+
 end

@@ -55,99 +55,72 @@ for iter = 1:iteration
                 est_covariance.var100(:,:,iter,num) = P.var100;
                 velocity_var100 = [0;0];
             case 2
-                prev_est_state_var001 = est_state.var001(:,iter,num-1);
                 est_covariance.var001(:,:,iter,num) = est_covariance.var001(:,:,iter,num-1);
-                est_state.var001(:,iter,num) = LSE.var001(:,iter,num);
-                velocity_var001 = (est_state.var001(:,iter,num) - prev_est_state_var001)./dt;
- 
-                prev_est_state_var01 = est_state.var01(:,iter,num-1);
                 est_covariance.var01(:,:,iter,num) = est_covariance.var01(:,:,iter,num-1);
-                est_state.var01(:,iter,num) = LSE.var01(:,iter,num);
-                velocity_var01 = (est_state.var01(:,iter,num) - prev_est_state_var01)./dt;
-
-                prev_est_state_var1 = est_state.var1(:,iter,num-1);
                 est_covariance.var1(:,:,iter,num) = est_covariance.var1(:,:,iter,num-1);
-                est_state.var1(:,iter,num) = LSE.var1(:,iter,num);
-                velocity_var1 = (est_state.var1(:,iter,num) - prev_est_state_var1)./dt;
-
-                prev_est_state_var10 = est_state.var10(:,iter,num-1);
                 est_covariance.var10(:,:,iter,num) = est_covariance.var10(:,:,iter,num-1);
-                est_state.var10(:,iter,num) = LSE.var10(:,iter,num);
-                velocity_var10 = (est_state.var10(:,iter,num) - prev_est_state_var10)./dt;
-
-                prev_est_state_var100 = est_state.var100(:,iter,num-1);
                 est_covariance.var100(:,:,iter,num) = est_covariance.var100(:,:,iter,num-1);
+
+                est_state.var001(:,iter,num) = LSE.var001(:,iter,num);
+                est_state.var01(:,iter,num) = LSE.var01(:,iter,num);
+                est_state.var1(:,iter,num) = LSE.var1(:,iter,num);
+                est_state.var10(:,iter,num) = LSE.var10(:,iter,num);
                 est_state.var100(:,iter,num) = LSE.var100(:,iter,num);
-                velocity_var100 = (est_state.var100(:,iter,num) - prev_est_state_var100)./dt;
             case 3
-                prev_est_state_var001 = est_state.var001(:,iter,num-1);
                 est_covariance.var001(:,:,iter,num) = est_covariance.var001(:,:,iter,num-1);
-                est_state.var001(:,iter,num) = LSE.var001(:,iter,num);
-                velocity_var001 = (est_state.var001(:,iter,num) - prev_est_state_var001)./dt;
- 
-                prev_est_state_var01 = est_state.var01(:,iter,num-1);
                 est_covariance.var01(:,:,iter,num) = est_covariance.var01(:,:,iter,num-1);
-                est_state.var01(:,iter,num) = LSE.var01(:,iter,num);
-                velocity_var01 = (est_state.var01(:,iter,num) - prev_est_state_var01)./dt;
-
-                prev_est_state_var1 = est_state.var1(:,iter,num-1);
                 est_covariance.var1(:,:,iter,num) = est_covariance.var1(:,:,iter,num-1);
-                est_state.var1(:,iter,num) = LSE.var1(:,iter,num);
-                velocity_var1 = (est_state.var1(:,iter,num) - prev_est_state_var1)./dt;
-
-                prev_est_state_var10 = est_state.var10(:,iter,num-1);
                 est_covariance.var10(:,:,iter,num) = est_covariance.var10(:,:,iter,num-1);
-                est_state.var10(:,iter,num) = LSE.var10(:,iter,num);
-                velocity_var10 = (est_state.var10(:,iter,num) - prev_est_state_var10)./dt;
-
-                prev_est_state_var100 = est_state.var100(:,iter,num-1);
                 est_covariance.var100(:,:,iter,num) = est_covariance.var100(:,:,iter,num-1);
+
+                est_state.var001(:,iter,num) = LSE.var001(:,iter,num);
+                est_state.var01(:,iter,num) = LSE.var01(:,iter,num);
+                est_state.var1(:,iter,num) = LSE.var1(:,iter,num);
+                est_state.var10(:,iter,num) = LSE.var10(:,iter,num);
                 est_state.var100(:,iter,num) = LSE.var100(:,iter,num);
-                velocity_var100 = (est_state.var100(:,iter,num) - prev_est_state_var100)./dt;
+
+                velocity_var001 = (est_state.var001(:,iter,num) - est_state.var001(:,iter,num-1))./dt;
+                velocity_var01 = (est_state.var01(:,iter,num) - est_state.var01(:,iter,num-1))./dt;
+                velocity_var1 = (est_state.var1(:,iter,num) - est_state.var1(:,iter,num-1))./dt;
+                velocity_var10 = (est_state.var10(:,iter,num) - est_state.var10(:,iter,num-1))./dt;
+                velocity_var100 = (est_state.var100(:,iter,num) - est_state.var100(:,iter,num-1))./dt;
             otherwise
-                prev_est_state_var001 = est_state.var001(:,iter,num-1);
-                prev_estimate_cov_001 = est_covariance.var001(:,:,iter,num-1);
-                [est_state_var001, est_covariance_var001, kalman_gain_001] = kalmanFilter(prev_est_state_var001,prev_estimate_cov_001,velocity_var001,Q.var001,Rconst.var001,Z.var001(:,1,iter,num),meanSysnoise.var001);
+                [est_state_var001, est_covariance_var001, kalman_gain_001] =...
+                    kalmanFilter(est_state.var001(:,iter,num-1),est_covariance.var001(:,:,iter,num-1),velocity_var001,Q.var001,Rconst.var001,Z.var001(:,1,iter,num),meanSysnoise.var001);
+                [est_state_var01, est_covariance_var01, kalman_gain_01] =...
+                    kalmanFilter(est_state.var01(:,iter,num-1),est_covariance.var01(:,:,iter,num-1),velocity_var01,Q.var01,Rconst.var01,Z.var01(:,1,iter,num),meanSysnoise.var01);
+                [est_state_var1, est_covariance_var1, kalman_gain_1] =...
+                    kalmanFilter(est_state.var1(:,iter,num-1),est_covariance.var1(:,:,iter,num-1),velocity_var1,Q.var1,Rconst.var1,Z.var1(:,1,iter,num),meanSysnoise.var1);
+                [est_state_var10, est_covariance_var10, kalman_gain_10] =...
+                    kalmanFilter(est_state.var10(:,iter,num-1),est_covariance.var10(:,:,iter,num-1),velocity_var10,Q.var10,Rconst.var10,Z.var10(:,1,iter,num),meanSysnoise.var10);
+                [est_state_var100, est_covariance_var100, kalman_gain_100] =...
+                    kalmanFilter(est_state.var100(:,iter,num-1),est_covariance.var100(:,:,iter,num-1),velocity_var100,Q.var100,Rconst.var100,Z.var100(:,1,iter,num),meanSysnoise.var100);
+
                 est_state.var001(:,iter,num) = est_state_var001;
-                est_covariance.var001(:,:,iter,num) = est_covariance_var001;
-                velocity_var001 = (est_state.var001(:,iter,num) - prev_est_state_var001)./dt;
-                KalmanGain.var001(:,:,iter,num) = kalman_gain_001;
-                
-                prev_est_state_var01 = est_state.var01(:,iter,num-1);
-                prev_estimate_cov_001 = est_covariance.var01(:,:,iter,num-1);
-                [est_state_var01, est_covariance_var01, kalman_gain_01] = kalmanFilter(prev_est_state_var01,prev_estimate_cov_001,velocity_var01,Q.var01,Rconst.var01,Z.var01(:,1,iter,num),meanSysnoise.var01);
                 est_state.var01(:,iter,num) = est_state_var01;
-                est_covariance.var01(:,:,iter,num) = est_covariance_var01;
-                velocity_var01 = (est_state.var01(:,iter,num) - prev_est_state_var01)./dt;
-                KalmanGain.var01(:,:,iter,num) = kalman_gain_01;
-
-                prev_est_state_var1 = est_state.var1(:,iter,num-1);
-                prev_estimate_cov_001 = est_covariance.var1(:,:,iter,num-1);
-                [est_state_var1, est_covariance_var1, kalman_gain_1] = kalmanFilter(prev_est_state_var1,prev_estimate_cov_001,velocity_var1,Q.var1,Rconst.var1,Z.var1(:,1,iter,num),meanSysnoise.var1);
                 est_state.var1(:,iter,num) = est_state_var1;
-                est_covariance.var1(:,:,iter,num) = est_covariance_var1;
-                velocity_var1 = (est_state.var1(:,iter,num) - prev_est_state_var1)./dt;
-                KalmanGain.var1(:,:,iter,num) = kalman_gain_1;
-
-                prev_est_state_var10 = est_state.var10(:,iter,num-1);
-                prev_estimate_cov_001 = est_covariance.var10(:,:,iter,num-1);
-                [est_state_var10, est_covariance_var10, kalman_gain_10] = kalmanFilter(prev_est_state_var10,prev_estimate_cov_001,velocity_var10,Q.var10,Rconst.var10,Z.var10(:,1,iter,num),meanSysnoise.var10);
                 est_state.var10(:,iter,num) = est_state_var10;
-                est_covariance.var10(:,:,iter,num) = est_covariance_var10;
-                velocity_var10 = (est_state.var10(:,iter,num) - prev_est_state_var10)./dt;
-                KalmanGain.var10(:,:,iter,num) = kalman_gain_10;
-
-                prev_est_state_var100 = est_state.var100(:,iter,num-1);
-                prev_estimate_cov_001 = est_covariance.var100(:,:,iter,num-1);
-                [est_state_var100, est_covariance_var100, kalman_gain_100] = kalmanFilter(prev_est_state_var100,prev_estimate_cov_001,velocity_var100,Q.var100,Rconst.var100,Z.var100(:,1,iter,num),meanSysnoise.var100);
                 est_state.var100(:,iter,num) = est_state_var100;
+
+                est_covariance.var001(:,:,iter,num) = est_covariance_var001;
+                est_covariance.var01(:,:,iter,num) = est_covariance_var01;
+                est_covariance.var1(:,:,iter,num) = est_covariance_var1;
+                est_covariance.var10(:,:,iter,num) = est_covariance_var10;
                 est_covariance.var100(:,:,iter,num) = est_covariance_var100;
-                velocity_var100 = (est_state.var100(:,iter,num) - prev_est_state_var100)./dt;
+
+                KalmanGain.var001(:,:,iter,num) = kalman_gain_001;
+                KalmanGain.var01(:,:,iter,num) = kalman_gain_01;
+                KalmanGain.var1(:,:,iter,num) = kalman_gain_1;
+                KalmanGain.var10(:,:,iter,num) = kalman_gain_10;
                 KalmanGain.var100(:,:,iter,num) = kalman_gain_100;
+
+                velocity_var001 = (est_state.var001(:,iter,num) - est_state.var001(:,iter,num-1))./dt;
+                velocity_var01 = (est_state.var01(:,iter,num) - est_state.var01(:,iter,num-1))./dt;
+                velocity_var1 = (est_state.var1(:,iter,num) - est_state.var1(:,iter,num-1))./dt;
+                velocity_var10 = (est_state.var10(:,iter,num) - est_state.var10(:,iter,num-1))./dt;
+                velocity_var100 = (est_state.var100(:,iter,num) - est_state.var100(:,iter,num-1))./dt;
         end
-
     end
-
 end
 
 save('est_state.mat','est_state');
