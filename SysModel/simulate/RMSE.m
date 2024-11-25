@@ -7,7 +7,7 @@ load("AdaptiveR_est_state.mat")
 load("AdaptiveQ_est_state.mat")
 
 n_variance = [0.01; 0.1; 1; 10; 100];
-
+gammamax=size(AdaptiveQ_est_state.var001,4);
 % iteration = 1e5;
 num_sample = 11;
 mse = zeros(length(n_variance),1);
@@ -15,7 +15,7 @@ lpf_mse_buf = zeros(length(n_variance),9);
 KFpredict_buf = zeros(length(n_variance),9);
 KF_mse = zeros(length(n_variance),1);
 KF_mseR = zeros(length(n_variance),1);
-KF_mseQ_buf = zeros(length(n_variance),9);
+KF_mseQ_buf = zeros(length(n_variance),gammamax);
 
 for iter = 1:iteration
     for num = 1:num_sample
@@ -45,14 +45,6 @@ for iter = 1:iteration
                 norm(KFpredict_state.var10(:,iter,num,a)-exactPos);...
                 norm(KFpredict_state.var100(:,iter,num,a)-exactPos)...
                 ];
-
-            KF_mseQ_buf(:,a) = KF_mseQ_buf(:,a) + [...
-                norm(AdaptiveQ_est_state.var001(:,iter,num,a)-exactPos);...
-                norm(AdaptiveQ_est_state.var01(:,iter,num,a)-exactPos);...
-                norm(AdaptiveQ_est_state.var1(:,iter,num,a)-exactPos);...
-                norm(AdaptiveQ_est_state.var10(:,iter,num,a)-exactPos);...
-                norm(AdaptiveQ_est_state.var100(:,iter,num,a)-exactPos)...
-                ];
         end
 
         KF_mse = KF_mse + [...
@@ -69,6 +61,16 @@ for iter = 1:iteration
             norm(AdaptiveR_est_state.var10(:,iter,num)-exactPos);...
             norm(AdaptiveR_est_state.var100(:,iter,num)-exactPos)...
             ];
+
+        for g=1:gammamax
+            KF_mseQ_buf(:,g) = KF_mseQ_buf(:,g) + [...
+                norm(AdaptiveQ_est_state.var001(:,iter,num,g)-exactPos);...
+                norm(AdaptiveQ_est_state.var01(:,iter,num,g)-exactPos);...
+                norm(AdaptiveQ_est_state.var1(:,iter,num,g)-exactPos);...
+                norm(AdaptiveQ_est_state.var10(:,iter,num,g)-exactPos);...
+                norm(AdaptiveQ_est_state.var100(:,iter,num,g)-exactPos)...
+                ];
+        end
     end
 end
 mse = mse./(iteration * num_sample);
@@ -95,8 +97,8 @@ ylabel("err");
 legend("ToA","LPF+ToA","KF(predict)+ToA","KF+ToA","KF+ToA(R)","KF+ToA(Q)");
 % legend("ToA","LPF+ToA","KF(predict)+ToA","KF+ToA","KF+ToA(R)");
 grid on
-disp("optimal alpha: "+optimal_alpha);
-disp("optimal alpha_predict: "+optimal_alpha_predict);
+disp("optimal alpha: "+optimal_alpha/10);
+disp("optimal alpha_predict: "+optimal_alpha_predict/10);
 disp("optimal gamma: "+optimal_gamma);
 
 end
