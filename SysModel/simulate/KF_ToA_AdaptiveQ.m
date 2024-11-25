@@ -30,11 +30,11 @@ function KF_ToA_AdaptiveQ(iteration)
         'var10', zeros(2,6,iteration,num_sample,alphamax),...
         'var100', zeros(2,6,iteration,num_sample,alphamax)...
         );
-    %iteration 1e3
-    % alpha = 9e-2+(a-1)*1e-2/3; 99991
-    % alpha = 7e-2+(a-1)*1e-2;   59672
+    %0.06~0.1400 0.01 iter1e4
+    %77762=[0.12 0.12 0.12 0.11 0.07]
+    %88762=[0.13 0.13 0.12 0.11 0.07]
     for a = 1:alphamax 
-        alpha = 7e-2+(a-1)*1e-2;
+        alpha = 6e-2+(a-1)*1e-2;
         for iter = 1:iteration
             Q=Qbuf;
             for num = 1:num_sample
