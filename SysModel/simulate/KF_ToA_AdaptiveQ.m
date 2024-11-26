@@ -9,6 +9,19 @@ function KF_ToA_AdaptiveQ(iteration)
     load("Z.mat");
     load("Rmean.mat");
     load("meanSysnoise.mat");
+    %
+    % Q.var001 = eig(Q.var001,'matrix');
+    % Q.var01 = eig(Q.var01,'matrix');
+    % Q.var1 = eig(Q.var1,'matrix');
+    % Q.var10 = eig(Q.var10,'matrix');
+    % Q.var100 = eig(Q.var100,'matrix');
+    % %
+    % P.var001 = diag(eig(P.var001));
+    % P.var01 = diag(eig(P.var01));
+    % P.var1 = diag(eig(P.var1));
+    % P.var10 = diag(eig(P.var10));
+    % P.var100 = diag(eig(P.var100));
+    % %
     Qbuf=Q;
     AdaptiveQ_est_state = struct('var001', zeros(2,iteration,num_sample,alphamax),...
         'var01', zeros(2,iteration,num_sample,alphamax),...
@@ -33,7 +46,10 @@ function KF_ToA_AdaptiveQ(iteration)
     %0.06~0.1400 0.01 iter1e4
     %77762=[0.12 0.12 0.12 0.11 0.07]
     %88762=[0.13 0.13 0.12 0.11 0.07]
-    for a = 1:alphamax 
+    
+    %Diag Q test
+    %88762=[0.13 0.13 0.12 0.11 0.07]
+    for a = 1:alphamax
         alpha = 6e-2+(a-1)*1e-2;
         for iter = 1:iteration
             Q=Qbuf;

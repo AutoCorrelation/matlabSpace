@@ -8,13 +8,21 @@ load("P.mat");
 load("Z.mat");
 load("Rconst.mat");
 load("meanSysnoise.mat");
-
+%
+gamma=[0.13 0.13 0.12 0.11 0.07]; %OPTIMIZED AT Q.DIAG
+%
 Q.var001 = eig(Q.var001,'matrix');
 Q.var01 = eig(Q.var01,'matrix');
 Q.var1 = eig(Q.var1,'matrix');
 Q.var10 = eig(Q.var10,'matrix');
 Q.var100 = eig(Q.var100,'matrix');
-
+% 
+% P.var001 = diag(eig(P.var001));
+% P.var01 = diag(eig(P.var01)); 
+% P.var1 = diag(eig(P.var1));
+% P.var10 = diag(eig(P.var10));
+% P.var100 = diag(eig(P.var100));
+Qbuf = Q;
 DiagQ_est_state = struct('var001', zeros(2,iteration,num_sample),...
     'var01', zeros(2,iteration,num_sample),...
     'var1', zeros(2,iteration,num_sample),...
@@ -37,6 +45,7 @@ DiagQ_KalmanGain = struct('var001', zeros(2,6,iteration,num_sample),...
     );
 
 for iter = 1:iteration
+    Q=Qbuf;
     for num = 1:num_sample
         exactPos = [num-1;num-1];
         switch num
@@ -125,6 +134,12 @@ for iter = 1:iteration
                 velocity_var1 = (DiagQ_est_state.var1(:,iter,num) - DiagQ_est_state.var1(:,iter,num-1))./dt;
                 velocity_var10 = (DiagQ_est_state.var10(:,iter,num) - DiagQ_est_state.var10(:,iter,num-1))./dt;
                 velocity_var100 = (DiagQ_est_state.var100(:,iter,num) - DiagQ_est_state.var100(:,iter,num-1))./dt;
+                
+                Q.var001 = Q.var001*exp(-gamma(1)*(num-3));
+                Q.var01 = Q.var01*exp(-gamma(2)*(num-3));
+                Q.var1 = Q.var1*exp(-gamma(3)*(num-3));
+                Q.var10 = Q.var10*exp(-gamma(4)*(num-3));
+                Q.var100 = Q.var100*exp(-gamma(5)*(num-3));
         end
     end
 end
