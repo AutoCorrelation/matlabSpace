@@ -2,14 +2,14 @@ function KF_ToA_DiagQ(iteration)
 % variables
 num_sample = 11;
 dt = 0.1;
-load("LSE.mat");
-load("Q.mat");
-load("P.mat");
-load("Z.mat");
-load("Rconst.mat");
-load("meanSysnoise.mat");
+load('LSE.mat');
+load('Q.mat');
+load('P.mat');
+load('Z.mat');
+load('Rconst.mat');
+load('meanSysnoise.mat');
 %
-gamma=[0.13 0.13 0.12 0.11 0.07]; %OPTIMIZED AT Q.DIAG
+gamma=[0.1320 0.1260 0.1260 0.1240 0.0720]; %OPTIMIZED AT Q.DIAG
 %
 Q.var001 = eig(Q.var001,'matrix');
 Q.var01 = eig(Q.var01,'matrix');
@@ -154,8 +154,8 @@ for i = 1:num_sample
 end
 figure;
 stem((1:num_sample),buf);
-title("norm(P Diag) KF")
-xlabel("step")
-ylabel("norm(P_k)")
+title('norm(P Diag) KF')
+xlabel('step')
+ylabel('norm(P_k)')
 
 end

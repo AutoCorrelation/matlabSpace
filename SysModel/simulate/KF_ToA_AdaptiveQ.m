@@ -49,6 +49,8 @@ function KF_ToA_AdaptiveQ(iteration)
     
     %Diag Q test
     %88762=[0.13 0.13 0.12 0.11 0.07]
+    % 51 gamma 6e-2+(a-1)*1e-2/5; 
+    % 37 34 34 33 7 [0.1320 0.1260 0.1260 0.1240 0.0720]
     for a = 1:alphamax
         alpha = 6e-2+(a-1)*1e-2;
         for iter = 1:iteration

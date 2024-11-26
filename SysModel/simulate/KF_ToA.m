@@ -2,12 +2,12 @@ function KF_ToA(iteration)
     % variables
     num_sample = 11;
     dt = 0.1;
-    load("LSE.mat");
-    load("Q.mat");
-    load("P.mat");
-    load("Z.mat");
-    load("Rmean.mat");
-    load("meanSysnoise.mat");
+    load('LSE.mat');
+    load('Q.mat');
+    load('P.mat');
+    load('Z.mat');
+    load('Rmean.mat');
+    load('meanSysnoise.mat');
     
     est_state = struct('var001', zeros(2,iteration,num_sample),...
         'var01', zeros(2,iteration,num_sample),...
@@ -133,7 +133,7 @@ function KF_ToA(iteration)
     end
     figure;
     stem((1:num_sample),buf);
-    title("norm(P) KF")
-    xlabel("step")
-    ylabel("trace(P_k)")
+    title('norm(P) KF')
+    xlabel('step')
+    ylabel('trace(P_k)')
 end
