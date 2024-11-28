@@ -89,19 +89,3 @@ plot(f, abs(S_f_FM2));
 title('Magnitude Spectrum of s(t) FM (k_f = 75000)');
 xlabel('Frequency (Hz)');
 ylabel('Magnitude');
-
-%% Functions
-function output = getIntegral(input,Ts)
-    output = zeros(size(input));
-    for i = 2:length(input)
-        output(i) = output(i-1) + input(i) * Ts;
-    end
-end
-
-function output = lpf(input,Bw,df)
-    output = zeros(size(input));
-    centre = ceil((length(input)+1)/2);
-    for i = floor(centre-Bw/df):ceil(centre+Bw/df)
-        output(i) = input(i);
-    end
-end
