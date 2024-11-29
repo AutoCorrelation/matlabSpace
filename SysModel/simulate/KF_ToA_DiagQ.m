@@ -11,11 +11,11 @@ load('meanSysnoise.mat');
 %
 gamma=[0.1320 0.1260 0.1260 0.1240 0.0720]; %OPTIMIZED AT Q.DIAG
 %
-Q.var001 = eig(Q.var001,'matrix');
-Q.var01 = eig(Q.var01,'matrix');
-Q.var1 = eig(Q.var1,'matrix');
-Q.var10 = eig(Q.var10,'matrix');
-Q.var100 = eig(Q.var100,'matrix');
+% Q.var001 = eig(Q.var001,'matrix');
+% Q.var01 = eig(Q.var01,'matrix');
+% Q.var1 = eig(Q.var1,'matrix');
+% Q.var10 = eig(Q.var10,'matrix');
+% Q.var100 = eig(Q.var100,'matrix');
 % 
 % P.var001 = diag(eig(P.var001));
 % P.var01 = diag(eig(P.var01)); 
@@ -148,7 +148,7 @@ save('DiagQ_est_state.mat','DiagQ_est_state');
 % save('DiagQ_est_covariance.mat','DiagQ_est_covariance');
 % save('DiagQ_KalmanGain.mat','DiagQ_KalmanGain');
 n_variance = [1e-2; 1e-1; 1e0; 1e1; 1e2];
-a = mean(DiagQ_est_covariance.var10,3);
+a = mean(DiagQ_est_covariance.var1,3);
 for i = 1:num_sample
     buf(i,1) = norm(a(:,:,1,i));
 end

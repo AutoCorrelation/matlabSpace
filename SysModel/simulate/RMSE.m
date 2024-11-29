@@ -103,5 +103,5 @@ disp(optimal_alpha/10);
 disp('optimal alpha_predict: ');
 disp(optimal_alpha_predict/10);
 disp('optimal gamma: ');
-disp(optimal_gamma);
+disp(6e-2+(optimal_gamma-1)*1e-2);
 end

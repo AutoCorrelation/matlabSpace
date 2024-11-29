@@ -30,6 +30,9 @@ predict_covariance = F * prev_estimate_cov * F' + Q;
 % kalman_gain = 0;
 kalman_gain = (predict_covariance * H')*pinv(H * predict_covariance * H' + R);
 
+% estimate_covariance = inv(inv(predict_covariance)+H'*pinv(R)*H);
+% kalman_gain = (predict_covariance)*H'*pinv(R);
+
 % estimate
 estimate_state = predict_state + kalman_gain * (measurement - H * predict_state);
 estimate_covariance = (eye(2) - kalman_gain * H) * predict_covariance;

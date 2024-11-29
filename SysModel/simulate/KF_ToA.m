@@ -127,7 +127,7 @@ function KF_ToA(iteration)
     % save('est_covariance.mat','est_covariance');
     % save('est_KalmanGain.mat','est_KalmanGain');
     n_variance = [1e-2; 1e-1; 1e0; 1e1; 1e2];
-    a = mean(est_covariance.var10,3);
+    a = mean(est_covariance.var1,3);
     for i = 1:num_sample
         buf(i,1) = norm(a(:,:,1,i));
     end
