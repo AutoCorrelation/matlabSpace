@@ -8,6 +8,8 @@ optimal_Lpf_ToA(iteration);
 optimal_Predict_ToA(iteration);
 KF_ToA(iteration);
 KF_ToA_DiagR(iteration);
+KF_ToA_designQ1(iteration);
+KF_ToA_designQ2(iteration);
 
 ResultofSimulation(iteration);
 

@@ -55,7 +55,8 @@ function findKF_ToA_AdaptiveQ(iteration)
     %alpha = 0.5+0.04*(a-1);
     %44447 = [0.62 0.62 0.62 0.62 0.74]
     % alpha = 0.6+0.02*(a-1);
-    %22238 = [0.62 0.62 0.62 0.64 0.74]
+    %22238 = [0.62 0.62 0.62 0.64 0.74]  [0.55 0.55 0.55 0.57 0.65]
+
     
     % diag Q R test
     % 2 1 1 1 1
@@ -63,7 +64,7 @@ function findKF_ToA_AdaptiveQ(iteration)
 
     for a = 1:alphamax
         % alpha = 6e-2+(a-1)*1e-2;
-        alpha = 0.6+0.02*(a-1);
+        alpha = 0.53+0.02*(a-1);
         % alpha = 0.07+0.01*(a-1);
         for iter = 1:iteration
             Q=Qbuf;
