@@ -10,11 +10,11 @@ function KF_ToA_AdaptiveQ(iteration)
     load("Rmean.mat");
     load("meanSysnoise.mat");
     %
-    Q.var001 = eig(Q.var001,'matrix');
-    Q.var01 = eig(Q.var01,'matrix');
-    Q.var1 = eig(Q.var1,'matrix');
-    Q.var10 = eig(Q.var10,'matrix');
-    Q.var100 = eig(Q.var100,'matrix');
+    % Q.var001 = eig(Q.var001,'matrix');
+    % Q.var01 = eig(Q.var01,'matrix');
+    % Q.var1 = eig(Q.var1,'matrix');
+    % Q.var10 = eig(Q.var10,'matrix');
+    % Q.var100 = eig(Q.var100,'matrix');
     % %
     % P.var001 = diag(eig(P.var001));
     % P.var01 = diag(eig(P.var01));
