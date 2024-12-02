@@ -1,20 +1,20 @@
-function KF_ToA_AdaptiveQ(iteration)
+function findKF_ToA_AdaptiveQ(iteration)
     % variables
     num_sample = 11;
     dt = 0.1;
     alphamax = 9;
-    load("LSE.mat");
-    load("Q.mat");
-    load("P.mat");
-    load("Z.mat");
-    load("Rmean.mat");
-    load("meanSysnoise.mat");
+    load('LSE.mat');
+    load('Q.mat');
+    load('P.mat');
+    load('Z.mat');
+    load('Rmean.mat');
+    load('meanSysnoise.mat');
     %
-    Q.var001 = eig(Q.var001,'matrix');
-    Q.var01 = eig(Q.var01,'matrix');
-    Q.var1 = eig(Q.var1,'matrix');
-    Q.var10 = eig(Q.var10,'matrix');
-    Q.var100 = eig(Q.var100,'matrix');
+    % Q.var001 = eig(Q.var001,'matrix');
+    % Q.var01 = eig(Q.var01,'matrix');
+    % Q.var1 = eig(Q.var1,'matrix');
+    % Q.var10 = eig(Q.var10,'matrix');
+    % Q.var100 = eig(Q.var100,'matrix');
     % %
     % P.var001 = diag(eig(P.var001));
     % P.var01 = diag(eig(P.var01));
@@ -51,8 +51,19 @@ function KF_ToA_AdaptiveQ(iteration)
     %88762=[0.13 0.13 0.12 0.11 0.07]
     % 51 gamma 6e-2+(a-1)*1e-2/5; 
     % 37 34 34 33 7 [0.1320 0.1260 0.1260 0.1240 0.0720]
+
+    % linearly decreasing alpha
+    % 66668 = [0.6 0.6 0.6 0.6 0.8]
+    %alpha = 0.5+0.04*(a-1);
+    %44447 = [0.62 0.62 0.62 0.62 0.74]
+    % alpha = 0.6+0.02*(a-1);
+    %22238 = [0.62 0.62 0.62 0.64 0.74]
+    
+
     for a = 1:alphamax
-        alpha = 6e-2+(a-1)*1e-2;
+        % alpha = 6e-2+(a-1)*1e-2;
+        % alpha = 0.6+0.02*(a-1);
+        alpha = a/10;
         for iter = 1:iteration
             Q=Qbuf;
             for num = 1:num_sample
@@ -149,6 +160,12 @@ function KF_ToA_AdaptiveQ(iteration)
                         Q.var1 = Q.var1*exp(-alpha*(num-3));
                         Q.var10 = Q.var10*exp(-alpha*(num-3));
                         Q.var100 = Q.var100*exp(-alpha*(num-3));
+    
+                        % Q.var001 = Q.var001*alpha;
+                        % Q.var01 = Q.var01*alpha;
+                        % Q.var1 = Q.var1*alpha;
+                        % Q.var10 = Q.var10*alpha;
+                        % Q.var100 = Q.var100*alpha;
                 end
             end
         end
@@ -165,8 +182,8 @@ function KF_ToA_AdaptiveQ(iteration)
     % end
     % figure;
     % stem((1:num_sample),buf_Q);
-    % title("tr(P) KFQ")
-    % xlabel("step")
-    % ylabel("trace(P_k)")
+    % title('tr(P) KFQ')
+    % xlabel('step')
+    % ylabel('trace(P_k)')
     
     end

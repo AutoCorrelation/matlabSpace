@@ -29,6 +29,9 @@ predict_covariance = F * prev_estimate_cov * F' + Q;
 
 % kalman_gain = 0;
 kalman_gain = (predict_covariance * H')*pinv(H * predict_covariance * H' + R);
+% det(diag(diag(H * predict_covariance * H' + R)))
+% kalman_gain = (predict_covariance * H')/(H * predict_covariance * H' + diag(diag(R)));
+% kalman_gain = (predict_covariance * H')/diag(diag((H * predict_covariance * H' + R)));
 
 % estimate_covariance = inv(inv(predict_covariance)+H'*pinv(R)*H);
 % kalman_gain = (predict_covariance)*H'*pinv(R);

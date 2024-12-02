@@ -208,11 +208,11 @@ meanSysnoise = struct('var001',mean(vec_processNoise.var001,2),...
     'var100',mean(vec_processNoise.var100,2)...
     );
 
-save('Rmean.mat',"Rmean");
-save('Rconst.mat',"Rconst");
-save('Z.mat',"Z");
+save('Rmean.mat','Rmean');
+save('Rconst.mat','Rconst');
+save('Z.mat','Z');
 save('LSE.mat','LSE');
-save("Q.mat","Q");
-save("P.mat","P");
+save('Q.mat','Q');
+save('P.mat','P');
 save('meanSysnoise.mat','meanSysnoise');
 end

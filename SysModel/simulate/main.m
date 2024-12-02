@@ -1,16 +1,7 @@
+close all;
 clear
 clc
-close all
+iteration=1e3;
 
-iteration=1e4;
-tic
+preSimulation(iteration); %include the preSimulation and ToA functions
 
-preSimulation(iteration);
-LPF_ToA(iteration);
-KFpredict_ToA(iteration);
-KF_ToA(iteration);
-KF_ToA_DiagQ(iteration);
-KF_ToA_AdaptiveQ(iteration);
-RMSE(iteration);
-
-toc

@@ -1,5 +1,5 @@
-function LPF_ToA(iteration)
-load("LSE.mat");
+function findLPF_ToA(iteration)
+load('LSE.mat');
 % iteration = 1e5;
 num_sample = 11;
 num_alpha = 9;
@@ -39,5 +39,5 @@ for a = 1:9
         end
     end
 end
-save("lpf_state.mat","lpf_state");
+save('lpf_state.mat','lpf_state');
 end
