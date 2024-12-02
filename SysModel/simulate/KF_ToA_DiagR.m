@@ -43,8 +43,8 @@ P.var10 = diag(diag(P.var10));
 P.var100 = diag(diag(P.var100));
 Qbuf = Q;
 
-% optimal_gamma = [0.15 0.15 0.15 0.14 0.10];
-% optimal_gamma = [0.15 0.15 0.15 0.14 0.10];
+optimal_gamma = [0.59 0.61 0.62 0.65 0.74]; %linear form
+% optimal_gamma = [0.132 0.124 0.120 0.112 0.076]; %exp form
 for iter = 1:iteration
     Q=Qbuf;
     for num = 1:num_sample
@@ -101,15 +101,15 @@ for iter = 1:iteration
                 velocity_var100 = (diagR_est_state.var100(:,iter,num) - diagR_est_state.var100(:,iter,num-1))./dt;
             otherwise
                 [diagR_est_state_var001, diagR_est_covariance_var001, diagR_kalman_gain_001] =...
-                    kalmanFilter_DiagR(diagR_est_state.var001(:,iter,num-1),diagR_est_covariance.var001(:,:,iter,num-1),velocity_var001,Q.var001,Rmean.var001(:,:,1,num),Z.var001(:,1,iter,num),meanSysnoise.var001);
+                    kalmanFilter(diagR_est_state.var001(:,iter,num-1),diagR_est_covariance.var001(:,:,iter,num-1),velocity_var001,Q.var001,diag(diag(Rmean.var001(:,:,1,num))),Z.var001(:,1,iter,num),meanSysnoise.var001);
                 [diagR_est_state_var01, diagR_est_covariance_var01, diagR_kalman_gain_01] =...
-                    kalmanFilter_DiagR(diagR_est_state.var01(:,iter,num-1),diagR_est_covariance.var01(:,:,iter,num-1),velocity_var01,Q.var01,Rmean.var01(:,:,1,num),Z.var01(:,1,iter,num),meanSysnoise.var01);
+                    kalmanFilter(diagR_est_state.var01(:,iter,num-1),diagR_est_covariance.var01(:,:,iter,num-1),velocity_var01,Q.var01,diag(diag(Rmean.var01(:,:,1,num))),Z.var01(:,1,iter,num),meanSysnoise.var01);
                 [diagR_est_state_var1, diagR_est_covariance_var1, diagR_kalman_gain_1] =...
-                    kalmanFilter_DiagR(diagR_est_state.var1(:,iter,num-1),diagR_est_covariance.var1(:,:,iter,num-1),velocity_var1,Q.var1,Rmean.var1(:,:,1,num),Z.var1(:,1,iter,num),meanSysnoise.var1);
+                    kalmanFilter(diagR_est_state.var1(:,iter,num-1),diagR_est_covariance.var1(:,:,iter,num-1),velocity_var1,Q.var1,diag(diag(Rmean.var1(:,:,1,num))),Z.var1(:,1,iter,num),meanSysnoise.var1);
                 [diagR_est_state_var10, diagR_est_covariance_var10, diagR_kalman_gain_10] =...
-                    kalmanFilter_DiagR(diagR_est_state.var10(:,iter,num-1),diagR_est_covariance.var10(:,:,iter,num-1),velocity_var10,Q.var10,Rmean.var10(:,:,1,num),Z.var10(:,1,iter,num),meanSysnoise.var10);
+                    kalmanFilter(diagR_est_state.var10(:,iter,num-1),diagR_est_covariance.var10(:,:,iter,num-1),velocity_var10,Q.var10,diag(diag(Rmean.var10(:,:,1,num))),Z.var10(:,1,iter,num),meanSysnoise.var10);
                 [diagR_est_state_var100, diagR_est_covariance_var100, diagR_kalman_gain_100] =...
-                    kalmanFilter_DiagR(diagR_est_state.var100(:,iter,num-1),diagR_est_covariance.var100(:,:,iter,num-1),velocity_var100,Q.var100,Rmean.var100(:,:,1,num),Z.var100(:,1,iter,num),meanSysnoise.var100);
+                    kalmanFilter(diagR_est_state.var100(:,iter,num-1),diagR_est_covariance.var100(:,:,iter,num-1),velocity_var100,Q.var100,diag(diag(Rmean.var100(:,:,1,num))),Z.var100(:,1,iter,num),meanSysnoise.var100);
 
                 diagR_est_state.var001(:,iter,num) = diagR_est_state_var001;
                 diagR_est_state.var01(:,iter,num) = diagR_est_state_var01;
@@ -135,11 +135,17 @@ for iter = 1:iteration
                 velocity_var10 = (diagR_est_state.var10(:,iter,num) - diagR_est_state.var10(:,iter,num-1))./dt;
                 velocity_var100 = (diagR_est_state.var100(:,iter,num) - diagR_est_state.var100(:,iter,num-1))./dt;
 
-                Q.var001 = Q.var001*exp(-optimal_gamma(1)*(num-3));
-                Q.var01 = Q.var01*exp(-optimal_gamma(2)*(num-3));
-                Q.var1 = Q.var1*exp(-optimal_gamma(3)*(num-3));
-                Q.var10 = Q.var10*exp(-optimal_gamma(4)*(num-3));
-                Q.var100 = Q.var100*exp(-optimal_gamma(5)*(num-3));
+                Q.var001 = Q.var001*optimal_gamma(1);
+                Q.var01 = Q.var01*optimal_gamma(2);
+                Q.var1 = Q.var1*optimal_gamma(3);
+                Q.var10 = Q.var10*optimal_gamma(4);
+                Q.var100 = Q.var100*optimal_gamma(5);
+
+                % Q.var001 = Q.var001*exp(-optimal_gamma(1)*(num-3));
+                % Q.var01 = Q.var01*exp(-optimal_gamma(2)*(num-3));
+                % Q.var1 = Q.var1*exp(-optimal_gamma(3)*(num-3));
+                % Q.var10 = Q.var10*exp(-optimal_gamma(4)*(num-3));
+                % Q.var100 = Q.var100*exp(-optimal_gamma(5)*(num-3));
         end
     end
 end

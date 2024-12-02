@@ -9,7 +9,7 @@ load('Z.mat');
 load('Rconst.mat');
 load('meanSysnoise.mat');
 %
-gamma=[0.62 0.62 0.62 0.64 0.74]; %OPTIMIZED AT Q.DIAG
+optimal_gamma=[0.62 0.62 0.62 0.64 0.74]; %OPTIMIZED AT Q.DIAG
 %
 % Q.var001 = eig(Q.var001,'matrix');
 % Q.var01 = eig(Q.var01,'matrix');
@@ -135,11 +135,11 @@ for iter = 1:iteration
                 velocity_var10 = (DesignQ1_est_state.var10(:,iter,num) - DesignQ1_est_state.var10(:,iter,num-1))./dt;
                 velocity_var100 = (DesignQ1_est_state.var100(:,iter,num) - DesignQ1_est_state.var100(:,iter,num-1))./dt;
                 
-                Q.var001 = Q.var001*gamma(1);
-                Q.var01 = Q.var01*gamma(2);
-                Q.var1 = Q.var1*gamma(3);
-                Q.var10 = Q.var10*gamma(4);
-                Q.var100 = Q.var100*gamma(5);
+                Q.var001 = Q.var001*optimal_gamma(1);
+                Q.var01 = Q.var01*optimal_gamma(2);
+                Q.var1 = Q.var1*optimal_gamma(3);
+                Q.var10 = Q.var10*optimal_gamma(4);
+                Q.var100 = Q.var100*optimal_gamma(5);
         end
     end
 end
