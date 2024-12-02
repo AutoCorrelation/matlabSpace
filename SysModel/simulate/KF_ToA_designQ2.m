@@ -9,7 +9,8 @@ load('Z.mat');
 load('Rconst.mat');
 load('meanSysnoise.mat');
 %
-gamma=[0.1320 0.1260 0.1260 0.1240 0.0720]; %OPTIMIZED AT Q.DIAG
+gamma=[0.132 0.124 0.120 0.112 0.076]; %OPTIMIZED AT Q.DIAG
+% gamma=[0.14 0.14 0.14 0.14 0.10]; %OPTIMIZED AT Q.DIAG R diag
 %
 % Q.var001 = eig(Q.var001,'matrix');
 % Q.var01 = eig(Q.var01,'matrix');
@@ -150,12 +151,12 @@ save('DesignQ2_est_state.mat','DesignQ2_est_state');
 n_variance = [1e-2; 1e-1; 1e0; 1e1; 1e2];
 a = mean(DesignQ2_est_covariance.var1,3);
 for i = 1:num_sample
-    buf(i,1) = norm(a(:,:,1,i));
+    buf(i,1) = trace(a(:,:,1,i));
 end
 figure;
 stem((1:num_sample),buf);
-title('norm(P Diag) KF')
+title('trace(P) KFQ2')
 xlabel('step')
-ylabel('norm(P_k)')
+ylabel('trace(P_k)')
 
 end

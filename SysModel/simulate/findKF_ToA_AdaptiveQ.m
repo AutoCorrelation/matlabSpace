@@ -49,27 +49,26 @@ function findKF_ToA_AdaptiveQ(iteration)
     %88762=[0.13 0.13 0.12 0.11 0.07]
     % 51 gamma 6e-2+(a-1)*1e-2/5; 
     % 37 34 34 33 7 [0.1320 0.1260 0.1260 0.1240 0.0720]
+    % [0.14 0.14 0.14 0.14 0.10]
 
     % linearly decreasing alpha
     % 66668 = [0.6 0.6 0.6 0.6 0.8]
     %alpha = 0.5+0.04*(a-1);
     %44447 = [0.62 0.62 0.62 0.62 0.74]
     % alpha = 0.6+0.02*(a-1);
-    %22238 = [0.62 0.62 0.62 0.64 0.74]  [0.55 0.55 0.55 0.57 0.65]
-
+    %22238 = [0.62 0.62 0.62 0.64 0.74]  // [0.55 0.55 0.55 0.57 0.65]
     
     % diag Q R test
     % 2 1 1 1 1
     %[0.15 0.14 0.13 0.14 0.09];
 
     for a = 1:alphamax
-        % alpha = 6e-2+(a-1)*1e-2;
+        % alpha = 0.06+0.01*(a-1);
         alpha = 0.53+0.02*(a-1);
         % alpha = 0.07+0.01*(a-1);
         for iter = 1:iteration
             Q=Qbuf;
             for num = 1:num_sample
-                exactPos = [num-1;num-1];
                 switch num
                     case 1
                         AdaptiveQ_est_state.var001(:,iter,num,a) = [0;0];
@@ -123,15 +122,15 @@ function findKF_ToA_AdaptiveQ(iteration)
                         velocity_var100 = (AdaptiveQ_est_state.var100(:,iter,num,a) - AdaptiveQ_est_state.var100(:,iter,num-1,a))./dt;
                     otherwise
                         [est_state_var001, est_covariance_var001, kalman_gain_001] =...
-                            kalmanFilter_DiagR(AdaptiveQ_est_state.var001(:,iter,num-1,a),AdaptiveQ_est_covariance.var001(:,:,iter,num-1,a),velocity_var001,Q.var001,Rmean.var001(:,:,1,num),Z.var001(:,1,iter,num),meanSysnoise.var001);
+                            kalmanFilter(AdaptiveQ_est_state.var001(:,iter,num-1,a),AdaptiveQ_est_covariance.var001(:,:,iter,num-1,a),velocity_var001,Q.var001,Rmean.var001(:,:,1,num),Z.var001(:,1,iter,num),meanSysnoise.var001);
                         [est_state_var01, est_covariance_var01, kalman_gain_01] =...
-                            kalmanFilter_DiagR(AdaptiveQ_est_state.var01(:,iter,num-1,a),AdaptiveQ_est_covariance.var01(:,:,iter,num-1,a),velocity_var01,Q.var01,Rmean.var01(:,:,1,num),Z.var01(:,1,iter,num),meanSysnoise.var01);
+                            kalmanFilter(AdaptiveQ_est_state.var01(:,iter,num-1,a),AdaptiveQ_est_covariance.var01(:,:,iter,num-1,a),velocity_var01,Q.var01,Rmean.var01(:,:,1,num),Z.var01(:,1,iter,num),meanSysnoise.var01);
                         [est_state_var1, est_covariance_var1, kalman_gain_1] =...
-                            kalmanFilter_DiagR(AdaptiveQ_est_state.var1(:,iter,num-1,a),AdaptiveQ_est_covariance.var1(:,:,iter,num-1,a),velocity_var1,Q.var1,Rmean.var1(:,:,1,num),Z.var1(:,1,iter,num),meanSysnoise.var1);
+                            kalmanFilter(AdaptiveQ_est_state.var1(:,iter,num-1,a),AdaptiveQ_est_covariance.var1(:,:,iter,num-1,a),velocity_var1,Q.var1,Rmean.var1(:,:,1,num),Z.var1(:,1,iter,num),meanSysnoise.var1);
                         [est_state_var10, est_covariance_var10, kalman_gain_10] =...
-                            kalmanFilter_DiagR(AdaptiveQ_est_state.var10(:,iter,num-1,a),AdaptiveQ_est_covariance.var10(:,:,iter,num-1,a),velocity_var10,Q.var10,Rmean.var10(:,:,1,num),Z.var10(:,1,iter,num),meanSysnoise.var10);
+                            kalmanFilter(AdaptiveQ_est_state.var10(:,iter,num-1,a),AdaptiveQ_est_covariance.var10(:,:,iter,num-1,a),velocity_var10,Q.var10,Rmean.var10(:,:,1,num),Z.var10(:,1,iter,num),meanSysnoise.var10);
                         [est_state_var100, est_covariance_var100, kalman_gain_100] =...
-                            kalmanFilter_DiagR(AdaptiveQ_est_state.var100(:,iter,num-1,a),AdaptiveQ_est_covariance.var100(:,:,iter,num-1,a),velocity_var100,Q.var100,Rmean.var100(:,:,1,num),Z.var100(:,1,iter,num),meanSysnoise.var100);
+                            kalmanFilter(AdaptiveQ_est_state.var100(:,iter,num-1,a),AdaptiveQ_est_covariance.var100(:,:,iter,num-1,a),velocity_var100,Q.var100,Rmean.var100(:,:,1,num),Z.var100(:,1,iter,num),meanSysnoise.var100);
     
                         AdaptiveQ_est_state.var001(:,iter,num,a) = est_state_var001;
                         AdaptiveQ_est_state.var01(:,iter,num,a) = est_state_var01;
