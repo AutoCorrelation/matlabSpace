@@ -9,19 +9,17 @@ function findKF_ToA_AdaptiveQ(iteration)
     load('Z.mat');
     load('Rmean.mat');
     load('meanSysnoise.mat');
-    %
-    % Q.var001 = eig(Q.var001,'matrix');
-    % Q.var01 = eig(Q.var01,'matrix');
-    % Q.var1 = eig(Q.var1,'matrix');
-    % Q.var10 = eig(Q.var10,'matrix');
-    % Q.var100 = eig(Q.var100,'matrix');
-    % %
-    % P.var001 = diag(eig(P.var001));
-    % P.var01 = diag(eig(P.var01));
-    % P.var1 = diag(eig(P.var1));
-    % P.var10 = diag(eig(P.var10));
-    % P.var100 = diag(eig(P.var100));
-    % %
+    Q.var001 = diag(diag(Q.var001));
+    Q.var01 = diag(diag(Q.var01));
+    Q.var1 = diag(diag(Q.var1));
+    Q.var10 = diag(diag(Q.var10));
+    Q.var100 = diag(diag(Q.var100));
+    
+    P.var001 = diag(diag(P.var001));
+    P.var01 = diag(diag(P.var01));
+    P.var1 = diag(diag(P.var1));
+    P.var10 = diag(diag(P.var10));  
+    P.var100 = diag(diag(P.var100));
     Qbuf=Q;
     AdaptiveQ_est_state = struct('var001', zeros(2,iteration,num_sample,alphamax),...
         'var01', zeros(2,iteration,num_sample,alphamax),...
@@ -59,11 +57,14 @@ function findKF_ToA_AdaptiveQ(iteration)
     % alpha = 0.6+0.02*(a-1);
     %22238 = [0.62 0.62 0.62 0.64 0.74]
     
+    % diag Q R test
+    % 2 1 1 1 1
+    %[0.15 0.14 0.13 0.14 0.09];
 
     for a = 1:alphamax
         % alpha = 6e-2+(a-1)*1e-2;
-        % alpha = 0.6+0.02*(a-1);
-        alpha = a/10;
+        alpha = 0.6+0.02*(a-1);
+        % alpha = 0.07+0.01*(a-1);
         for iter = 1:iteration
             Q=Qbuf;
             for num = 1:num_sample
@@ -121,15 +122,15 @@ function findKF_ToA_AdaptiveQ(iteration)
                         velocity_var100 = (AdaptiveQ_est_state.var100(:,iter,num,a) - AdaptiveQ_est_state.var100(:,iter,num-1,a))./dt;
                     otherwise
                         [est_state_var001, est_covariance_var001, kalman_gain_001] =...
-                            kalmanFilter(AdaptiveQ_est_state.var001(:,iter,num-1,a),AdaptiveQ_est_covariance.var001(:,:,iter,num-1,a),velocity_var001,Q.var001,Rmean.var001(:,:,1,num),Z.var001(:,1,iter,num),meanSysnoise.var001);
+                            kalmanFilter_DiagR(AdaptiveQ_est_state.var001(:,iter,num-1,a),AdaptiveQ_est_covariance.var001(:,:,iter,num-1,a),velocity_var001,Q.var001,Rmean.var001(:,:,1,num),Z.var001(:,1,iter,num),meanSysnoise.var001);
                         [est_state_var01, est_covariance_var01, kalman_gain_01] =...
-                            kalmanFilter(AdaptiveQ_est_state.var01(:,iter,num-1,a),AdaptiveQ_est_covariance.var01(:,:,iter,num-1,a),velocity_var01,Q.var01,Rmean.var01(:,:,1,num),Z.var01(:,1,iter,num),meanSysnoise.var01);
+                            kalmanFilter_DiagR(AdaptiveQ_est_state.var01(:,iter,num-1,a),AdaptiveQ_est_covariance.var01(:,:,iter,num-1,a),velocity_var01,Q.var01,Rmean.var01(:,:,1,num),Z.var01(:,1,iter,num),meanSysnoise.var01);
                         [est_state_var1, est_covariance_var1, kalman_gain_1] =...
-                            kalmanFilter(AdaptiveQ_est_state.var1(:,iter,num-1,a),AdaptiveQ_est_covariance.var1(:,:,iter,num-1,a),velocity_var1,Q.var1,Rmean.var1(:,:,1,num),Z.var1(:,1,iter,num),meanSysnoise.var1);
+                            kalmanFilter_DiagR(AdaptiveQ_est_state.var1(:,iter,num-1,a),AdaptiveQ_est_covariance.var1(:,:,iter,num-1,a),velocity_var1,Q.var1,Rmean.var1(:,:,1,num),Z.var1(:,1,iter,num),meanSysnoise.var1);
                         [est_state_var10, est_covariance_var10, kalman_gain_10] =...
-                            kalmanFilter(AdaptiveQ_est_state.var10(:,iter,num-1,a),AdaptiveQ_est_covariance.var10(:,:,iter,num-1,a),velocity_var10,Q.var10,Rmean.var10(:,:,1,num),Z.var10(:,1,iter,num),meanSysnoise.var10);
+                            kalmanFilter_DiagR(AdaptiveQ_est_state.var10(:,iter,num-1,a),AdaptiveQ_est_covariance.var10(:,:,iter,num-1,a),velocity_var10,Q.var10,Rmean.var10(:,:,1,num),Z.var10(:,1,iter,num),meanSysnoise.var10);
                         [est_state_var100, est_covariance_var100, kalman_gain_100] =...
-                            kalmanFilter(AdaptiveQ_est_state.var100(:,iter,num-1,a),AdaptiveQ_est_covariance.var100(:,:,iter,num-1,a),velocity_var100,Q.var100,Rmean.var100(:,:,1,num),Z.var100(:,1,iter,num),meanSysnoise.var100);
+                            kalmanFilter_DiagR(AdaptiveQ_est_state.var100(:,iter,num-1,a),AdaptiveQ_est_covariance.var100(:,:,iter,num-1,a),velocity_var100,Q.var100,Rmean.var100(:,:,1,num),Z.var100(:,1,iter,num),meanSysnoise.var100);
     
                         AdaptiveQ_est_state.var001(:,iter,num,a) = est_state_var001;
                         AdaptiveQ_est_state.var01(:,iter,num,a) = est_state_var01;
@@ -155,17 +156,17 @@ function findKF_ToA_AdaptiveQ(iteration)
                         velocity_var10 = (AdaptiveQ_est_state.var10(:,iter,num,a) - AdaptiveQ_est_state.var10(:,iter,num-1,a))./dt;
                         velocity_var100 = (AdaptiveQ_est_state.var100(:,iter,num,a) - AdaptiveQ_est_state.var100(:,iter,num-1,a))./dt;
     
-                        Q.var001 = Q.var001*exp(-alpha*(num-3));
-                        Q.var01 = Q.var01*exp(-alpha*(num-3));
-                        Q.var1 = Q.var1*exp(-alpha*(num-3));
-                        Q.var10 = Q.var10*exp(-alpha*(num-3));
-                        Q.var100 = Q.var100*exp(-alpha*(num-3));
+                        % Q.var001 = Q.var001*exp(-alpha*(num-3));
+                        % Q.var01 = Q.var01*exp(-alpha*(num-3));
+                        % Q.var1 = Q.var1*exp(-alpha*(num-3));
+                        % Q.var10 = Q.var10*exp(-alpha*(num-3));
+                        % Q.var100 = Q.var100*exp(-alpha*(num-3));
     
-                        % Q.var001 = Q.var001*alpha;
-                        % Q.var01 = Q.var01*alpha;
-                        % Q.var1 = Q.var1*alpha;
-                        % Q.var10 = Q.var10*alpha;
-                        % Q.var100 = Q.var100*alpha;
+                        Q.var001 = Q.var001*alpha;
+                        Q.var01 = Q.var01*alpha;
+                        Q.var1 = Q.var1*alpha;
+                        Q.var10 = Q.var10*alpha;
+                        Q.var100 = Q.var100*alpha;
                 end
             end
         end

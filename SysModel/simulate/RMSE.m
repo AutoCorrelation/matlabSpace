@@ -101,8 +101,8 @@ grid on
 disp('optimal alpha: ');
 disp(optimal_alpha/10);
 disp('optimal alpha_predict: ');
-disp(optimal_alpha_predict/10);
+disp(0.28+(optimal_alpha_predict-1)*0.01);
 disp('optimal gamma: ');
-disp(6e-2+(optimal_gamma-1)*1e-2);
-disp(optimal_gamma);
+disp(0.07+0.01*(optimal_gamma-1));
+% disp(optimal_gamma);
 end

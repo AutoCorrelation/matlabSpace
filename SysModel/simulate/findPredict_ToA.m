@@ -1,10 +1,8 @@
-function KFpredict_ToA(iteration)
+function findpredict_ToA(iteration)
 load('LSE.mat');
 load('meanSysnoise.mat');
 load('Q.mat');
 dt = 0.1;
-
-% iteration = 1e5;
 num_sample = 11;
 num_alpha = 9;
 KFpredict_state = struct('var001', zeros(2,iteration,num_sample,num_alpha),...
@@ -14,9 +12,9 @@ KFpredict_state = struct('var001', zeros(2,iteration,num_sample,num_alpha),...
     'var100', zeros(2,iteration,num_sample,num_alpha)...
     );
 
-% OPTIMAL ALPHA VALUE IS [0.40 0.40 0.40 0.30 0.30]
+% OPTIMAL ALPHA VALUE IS [0.35 0.35 0.34 0.33 0.29]
 for a = 1:9
-    alpha = a/10;
+    alpha = 0.28 + 0.01*(a-1);
     for iter = 1:iteration
         for num = 1:num_sample
             switch num
