@@ -43,8 +43,9 @@ P.var10 = diag(diag(P.var10));
 P.var100 = diag(diag(P.var100));
 Qbuf = Q;
 
-optimal_gamma = [0.59 0.61 0.62 0.65 0.74]; %linear form
-% optimal_gamma = [0.132 0.124 0.120 0.112 0.076]; %exp form
+% optimal_gamma = [0.59 0.61 0.62 0.65 0.74]; %linear form
+optimal_gamma = [0.55 0.55 0.55 0.57 0.65]; %exp form
+% optimal_gamma=[0.14 0.14 0.14 0.14 0.10];
 for iter = 1:iteration
     Q=Qbuf;
     for num = 1:num_sample
