@@ -1,4 +1,4 @@
-function [x_hat, P] = func_KF(previous_state, previous_covariance, vel, bias, Q, R, Z)
+function [x_hat, P, Q_adaptive] = func_KF(previous_state, previous_covariance, vel, bias, Q, R, Z)
 % Kalman Filter
 % Prediction
 persistent first_Run H A;
@@ -15,16 +15,19 @@ if isempty(first_Run)
         0, 2*d2];
     A = eye(2);
 end
-
-x_hat_minus = A*previous_state + vel + bias;
+x_hat_minus = A*previous_state + vel - bias;
 P_minus = A*previous_covariance*A' + Q;
 
 % Regularize R matrix
-epsilon = 1e-6;
-R = R + epsilon * eye(size(R));
+% epsilon = 1e-6;
+% R = R + epsilon * eye(size(R));
 
 % Update
-K = P_minus*H'/(H*P_minus*H' + R);
+K = P_minus*H'*pinv(H*P_minus*H' + R);
 x_hat = x_hat_minus + K*(Z - H*x_hat_minus);
 P = (eye(2) - K*H)*P_minus;
+
+alpha = 0.95; % forgetting factor
+innovation = Z - H*x_hat_minus;
+Q_adaptive = (1-alpha)*Q + alpha*(K*(innovation*innovation')*K');
 end

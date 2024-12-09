@@ -12,8 +12,9 @@ if isempty(first_run)
         2*d1, 0
         2*d1, 2*d2
         0, 2*d2];
+    H_pseudoInv = (H'*H)\H';
 end
-output = pinv(H)*Z;
+output = H_pseudoInv*Z;
 
 
 end
