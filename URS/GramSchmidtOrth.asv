@@ -1,8 +1,0 @@
-function [outMat] = GramSchmidtOrth(inMat)
-% Matrix Orthoginalization Process
-%   자세한 설명 위치 oMat = output_Matrix
-[M, N] = size(inMat);
-v1 = inMat(:,1);
-R(1,1) = norm(inMat);
-Q(:,1)
-end
